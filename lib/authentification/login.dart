@@ -2,24 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-class Register extends StatelessWidget {
-  const Register({super.key});
+class Login extends StatelessWidget {
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text("BIENVENUE SUR KAPOUT"),
-        const Text("S'inscrire"),
-        Padding(
-          padding: const EdgeInsets.all(4),
-          child: TextFormField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Créer votre pseudo',
-            ),
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(4),
           child: TextFormField(
@@ -39,16 +28,6 @@ class Register extends StatelessWidget {
             obscureText: true,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(4),
-          child: TextFormField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Confirmer le mot de passe',
-            ),
-            obscureText: true,
-          ),
-        ),
         TextButton(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
@@ -56,7 +35,7 @@ class Register extends StatelessWidget {
               minimumSize:
                   MaterialStateProperty.all(const Size.fromRadius(10))),
           onPressed: () {},
-          child: const Text('S\'inscrire'),
+          child: const Text('Se connecter'),
         )
       ]),
     );
