@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "898761515066",
+    "project_id": "kapout-3il",
+    "storage_bucket": "kapout-3il.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898761515066:android:326d1ddd982ec084ff5503",
+        "android_client_info": {
+          "package_name": "com.example.kapout"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSL17dO8wnZzOBgjqrLmv0_vJ62r5_xS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

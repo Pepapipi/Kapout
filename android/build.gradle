@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
     }
 }
 
@@ -16,6 +17,11 @@ allprojects {
         google()
         mavenCentral()
     }
+}
+
+plugins {
+  id 'com.google.gms.google-services' version '4.4.1' apply false
+
 }
 
 rootProject.buildDir = '../build'
