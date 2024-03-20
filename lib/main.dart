@@ -2,11 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/pages/authentification/login.dart';
 import 'package:kapout/pages/authentification/register.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-Future main() async {
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  
+   await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyDSL17dO8wnZzOBgjqrLmv0_vJ62r5_xS4", // paste your api key here
+      appId: "1:898761515066:android:326d1ddd982ec084ff5503", //paste your app id here
+      messagingSenderId: "898761515066", //paste your messagingSenderId here
+      projectId: "kapout-3il", //paste your project id here
+    ),
+  );
   runApp(const MyApp());
 }
 
