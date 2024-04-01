@@ -35,7 +35,6 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("S'inscrire"),
       ),
       body: Center(
         child: Padding(
@@ -44,7 +43,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Sign Up",
+                "S'inscrire",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -52,7 +51,7 @@ class _RegisterState extends State<Register> {
               ),
               FormContainerWidget(
                 controller: _usernameController,
-                hintText: "Username",
+                hintText: "Pseudo",
                 isPasswordField: false,
               ),
               const SizedBox(
@@ -68,7 +67,7 @@ class _RegisterState extends State<Register> {
               ),
               FormContainerWidget(
                 controller: _passwordController,
-                hintText: "Password",
+                hintText: "Mot de passe",
                 isPasswordField: true,
               ),
               SizedBox(
@@ -91,7 +90,7 @@ class _RegisterState extends State<Register> {
                               color: Colors.white,
                             )
                           : const Text(
-                              "Sign Up",
+                              "S'incrire",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -104,7 +103,7 @@ class _RegisterState extends State<Register> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already have an account?"),
+                  const Text("Vous avez déjà un compte ?"),
                   const SizedBox(
                     width: 5,
                   ),
@@ -117,7 +116,7 @@ class _RegisterState extends State<Register> {
                             (route) => false);
                       },
                       child: const Text(
-                        "Login",
+                        "Se connecter",
                         style: TextStyle(
                             color: Colors.blue, fontWeight: FontWeight.bold),
                       ))
