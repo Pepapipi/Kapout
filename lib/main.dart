@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kapout/pages/authentification/login.dart';
 import 'package:kapout/pages/authentification/register.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:kapout/pages/song/song_quizz.dart';
 
 
 void main() async {
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const Login(),
+      home: const SongQuizz(),
     );
   }
 }
