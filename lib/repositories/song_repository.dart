@@ -6,9 +6,9 @@ class SongRepository {
   static SongRepository get instance => SongRepository();
   final _db = FirebaseFirestore.instance;
   
-  Future<List<Map<String, dynamic>>> getSongs() async {
+  Future<List<SongModel>> getSongs() async {
     final songs = await _db.collection('Songs').get();
-    return songs.docs.map((e) => e.data()).toList();
+    return songs.docs.map((e) => SongModel.fromSnapshot(e)).toList();
   }
 
   Future<void> addSong(Map<String, dynamic> song) async {

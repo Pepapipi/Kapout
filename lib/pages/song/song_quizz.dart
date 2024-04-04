@@ -15,18 +15,37 @@ class SongQuizz extends StatefulWidget {
 
 class _SongQuizzState extends State<SongQuizz> {
   late Future<SongModel> _songModelFuture;
-  SongModel? _song;
-  DateTime start = DateTime.now();
+  late Future<List<SongModel>> _songs;
+  int finalScore = 0;
+  int maxPoints = 15;
+  int index = 0;
+  late SongModel _song;
+  late DateTime start;
   final audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    _songModelFuture = SongRepository.instance.getSong("OCnVIKTDi5wZzs7WLsJK");
-    _songModelFuture.then((songModel) {
-      musiquePlayer(songModel.firestoreName);
-    });   
+    _songs = SongRepository.instance.getSongs();
+    makePage();
   }
+
+void makePage() {
+  _songModelFuture = _songs.then((songs) {
+    if (songs.length > index) {
+      _song = songs[index];
+      return _song;
+    } else {
+      audioPlayer.stop();
+      
+      throw Exception("Score final: $finalScore");
+    }
+  });
+  _songModelFuture.then((songModel) {
+    musiquePlayer(songModel.firestoreName);
+  });
+}
+
 
 Future<void> musiquePlayer(String fileName) async {
   
@@ -36,14 +55,36 @@ Future<void> musiquePlayer(String fileName) async {
    try {
       String downloadURL = await firebaseStorageRef.getDownloadURL();
       audioPlayer.play(UrlSource(downloadURL));
-      await Future.delayed(const Duration(seconds: 10));
+      start = DateTime.now();
+      await Future.delayed(const Duration(seconds: 15));
       await audioPlayer.pause();
-
     }
     // ignore: empty_catches
     catch (e) {
     }
 }
+
+Widget proposition(response, proposition) {
+  return GestureDetector(
+    onTap: () {
+      setState(() {
+        if(response == proposition) {
+          Duration difference = DateTime.now().difference(start);
+          int score = maxPoints - difference.inSeconds;
+          if(score < 0) {
+            score = 1;
+          }
+          finalScore += score;
+        }
+        //Passer à la chanson suivante
+        index++;
+        makePage();
+      });
+    },
+    child: ContainerSong(text: proposition),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +97,7 @@ Future<void> musiquePlayer(String fileName) async {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  _song = snapshot.data;
+                  _song = snapshot.data!;
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -65,7 +106,7 @@ Future<void> musiquePlayer(String fileName) async {
                         size: 64.0,
                       ),
                       Text(
-                        _song?.type != 'artist' ? "Trouver le titre de la musique" : "Trouver l'artiste de la musique",
+                        _song.type != 'artist' ? "Trouver le titre de la musique" : "Trouver l'artiste de la musique",
                         style: const TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
                       ),
                       Column(
@@ -73,16 +114,16 @@ Future<void> musiquePlayer(String fileName) async {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              ContainerSong(text: _song?.propositions[0] ?? ""),
-                              ContainerSong(text: _song?.propositions[1] ?? ""),
+                              proposition(_song.response,_song.propositions[0]),
+                              proposition(_song.response,_song.propositions[1]),
                             ],
                           ),
                           const SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              ContainerSong(text: _song?.propositions[2] ?? ""),
-                              ContainerSong(text: _song?.propositions[3] ?? ""),
+                              proposition(_song.response,_song.propositions[2]),
+                              proposition(_song.response,_song.propositions[3]),
                             ],
                           )
                         ],
