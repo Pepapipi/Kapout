@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kapout/constants.dart';
+import 'package:kapout/models/quizz_model.dart';
+import 'package:kapout/repositories/quizz_repository.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +14,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<QuizzModel>> _quizzs;
+  late List<QuizzModel> _quizz;
+
+  @override
+  void initState() {
+    super.initState();
+    _quizzs = QuizzRepository.instance.getQuizzs();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,13 +50,11 @@ class _HomePageState extends State<HomePage> {
               const Positioned(
                   top: 50,
                   left: 20,
-                child: const Text('Bonjour Pepapipi',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white))
-              ),
-              
+                  child: Text('Bonjour Pepapipi',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white))),
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.center,
@@ -97,20 +107,29 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 10),
-          ContainerTest(),
-          const SizedBox(height: 10),
-          ContainerTest(),
-          const SizedBox(height: 10),
-          ContainerTest(),
-          const SizedBox(height: 10),
-          ContainerTest(),
+          FutureBuilder(
+            future: _quizzs,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  _quizz = snapshot.data as List<QuizzModel>;
+
+                  for (var quizz in _quizz) {
+                    return containerTest(
+                        quizz.name, quizz.songs.length.toString());
+                  }
+                }
+              }
+              return const CircularProgressIndicator();
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-Widget ContainerTest() {
+Widget containerTest(String name, String nbQuestions) {
   return Container(
     height: 80,
     width: 350,
@@ -129,8 +148,7 @@ Widget ContainerTest() {
     child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               height: 60,
@@ -147,22 +165,28 @@ Widget ContainerTest() {
                 ),
               ),
             ),
-            const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Variété française',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '10 questions',
-                  style: TextStyle(
-                    fontSize: 16,
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style:  const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-              ],
+                  Text(
+                    '$nbQuestions questions',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 10),
             const Icon(
               Icons.play_arrow,
               color: Colors.grey,
