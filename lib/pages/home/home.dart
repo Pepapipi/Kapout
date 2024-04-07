@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/quizz_model.dart';
+import 'package:kapout/pages/song/song_quizz.dart';
 import 'package:kapout/repositories/quizz_repository.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -22,6 +23,81 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _quizzs = QuizzRepository.instance.getQuizzs();
   }
+
+
+Widget containerTest(String name, String nbQuestions, String quizzId) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SongQuizz(quizzId: quizzId)));
+    },
+    child: Container(
+      height: 80,
+      width: 350,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(1),
+            spreadRadius: 1,
+            blurRadius: 1,
+            // changes position of shadow
+          ),
+        ],
+      ),
+      child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: champagePink_900,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Center(
+                  child: Icon(
+                    PhosphorIconsBold.vinylRecord,
+                    color: Colors.white,
+                    size: 35.0,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style:  const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '$nbQuestions questions',
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Icon(
+                Icons.play_arrow,
+                color: Colors.grey,
+              ),
+            ],
+          )),
+    ),
+  );
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +189,20 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
                   _quizz = snapshot.data as List<QuizzModel>;
-
-                  for (var quizz in _quizz) {
-                    return containerTest(
-                        quizz.name, quizz.songs.length.toString());
-                  }
+                  return Column(
+                    children: _quizz.map((quizz) {
+                      return Column(
+                        children: [
+                          containerTest(
+                            quizz.name,
+                            quizz.songs.length.toString(),
+                            quizz.id!,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    }).toList(),
+                  );
                 }
               }
               return const CircularProgressIndicator();
@@ -129,69 +214,3 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget containerTest(String name, String nbQuestions) {
-  return Container(
-    height: 80,
-    width: 350,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(1),
-          spreadRadius: 1,
-          blurRadius: 1,
-          // changes position of shadow
-        ),
-      ],
-    ),
-    child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: 60,
-              width: 60,
-              decoration: BoxDecoration(
-                color: champagePink_900,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: const Center(
-                child: Icon(
-                  PhosphorIconsBold.vinylRecord,
-                  color: Colors.white,
-                  size: 35.0,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style:  const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '$nbQuestions questions',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Icon(
-              Icons.play_arrow,
-              color: Colors.grey,
-            ),
-          ],
-        )),
-  );
-}

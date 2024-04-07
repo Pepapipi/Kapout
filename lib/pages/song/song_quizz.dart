@@ -2,20 +2,24 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
+import 'package:kapout/models/quizz_model.dart';
 import 'package:kapout/models/song_model.dart';
+import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/repositories/quizz_repository.dart';
 import 'package:kapout/repositories/song_repository.dart';
 
 
 class SongQuizz extends StatefulWidget {
-  const SongQuizz({Key? key}) : super(key: key);
+  String quizzId;
+  SongQuizz({Key? key, required this.quizzId}) : super(key: key);
 
   @override
   State<SongQuizz> createState() => _SongQuizzState();
 }
 
 class _SongQuizzState extends State<SongQuizz> {
-  late Future<SongModel> _songModelFuture;
-  late Future<List<SongModel>> _songs;
+  late Future<SongModel>? _songModelFuture;
+  late List<Future<SongModel>> _songs = []; // Initialiser _songs
   int finalScore = 0;
   int maxPoints = 15;
   int index = 0;
@@ -26,25 +30,33 @@ class _SongQuizzState extends State<SongQuizz> {
   @override
   void initState() {
     super.initState();
-    _songs = SongRepository.instance.getSongs();
-    makePage();
+    _songModelFuture = null;
+    Future<QuizzModel> _quizz = QuizzRepository.instance.getQuizz(widget.quizzId);
+      _quizz.then((quizz) {
+      setState(() { // Mettre à jour l'état de la classe
+        _songs = quizz.songs.map<Future<SongModel>>((songId) {
+          return SongRepository.instance.getSong(songId);
+        }).toList();
+        makePage(); // Appeler makePage une fois que _songs est défini
+      });
+    });
   }
 
-void makePage() {
-  _songModelFuture = _songs.then((songs) {
-    if (songs.length > index) {
-      _song = songs[index];
-      return _song;
-    } else {
+void makePage() async{
+    if(index >= _songs.length) {
       audioPlayer.stop();
-      
-      throw Exception("Score final: $finalScore");
+      print("Score final: $finalScore");
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => HomePage()));
     }
-  });
-  _songModelFuture.then((songModel) {
-    musiquePlayer(songModel.firestoreName);
-  });
-}
+
+    _songModelFuture = Future.value(_songs[index]);
+    _songModelFuture!.then((songModel) {
+      musiquePlayer(songModel.firestoreName);
+    }).catchError((error) {
+   
+      throw Exception("Score final: $finalScore");
+    });
+  }
 
 
 Future<void> musiquePlayer(String fileName) async {

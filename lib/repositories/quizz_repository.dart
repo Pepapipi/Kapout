@@ -11,7 +11,7 @@ class QuizzRepository {
   }
 
   Future<QuizzModel> getQuizz(String id) async {
-    final song = await _db.collection('Songs').doc(id).get();
+    final song = await _db.collection('Quizzs').doc(id).get();
     return QuizzModel.fromSnapshot(song);
    }
 
