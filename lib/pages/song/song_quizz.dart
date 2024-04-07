@@ -5,6 +5,7 @@ import 'package:kapout/components/container_song.dart';
 import 'package:kapout/models/quizz_model.dart';
 import 'package:kapout/models/song_model.dart';
 import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/pages/song/song_final_score.dart';
 import 'package:kapout/repositories/quizz_repository.dart';
 import 'package:kapout/repositories/song_repository.dart';
 
@@ -46,7 +47,7 @@ void makePage() async{
     if(index >= _songs.length) {
       audioPlayer.stop();
       print("Score final: $finalScore");
-      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+      Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  SongFinalScore(score: finalScore)));
     }
 
     _songModelFuture = Future.value(_songs[index]);
