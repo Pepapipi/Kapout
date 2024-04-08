@@ -39,6 +39,11 @@ dependencies:
   firebase_auth: ^4.6.3
   fluttertoast: ^8.2.4
   cloud_firestore: ^4.15.10
+  firebase_storage: ^11.7.0
+  audioplayers: ^6.0.0
+  path_provider: ^2.1.2
+  phosphor_flutter: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:
