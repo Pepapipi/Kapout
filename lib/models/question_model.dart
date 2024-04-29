@@ -1,17 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kapout/models/artist_model.dart';
 
-class SongModel {
+class QuestionModel {
   final String? id;
-  final List<ArtistModel> artists;
-  final String name;
-  final String? url;
+  final List<String> artists;
+  final String songName;
+  final List<String> propositions;
+  final String response;
+  final String type;
+  final String firestoreName;
 
-  const SongModel({
+  const QuestionModel({
     this.id,
     required this.artists,
-    required this.name,
-    this.url
+    required this.songName,
+    required this.propositions,
+    required this.response,
+    required this.type,
+    required this.firestoreName,
   });
 
   
