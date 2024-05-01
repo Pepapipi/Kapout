@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/pages/song/quiz.dart';
+import 'package:kapout/pages/quiz/quiz.dart';
 import 'package:kapout/repositories/quiz_repository.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 

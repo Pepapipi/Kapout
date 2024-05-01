@@ -3,10 +3,10 @@ import 'package:kapout/constants.dart';
 import 'package:kapout/pages/home/home.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class SongFinalScore extends StatelessWidget {
+class QuizFinalScore extends StatelessWidget {
   final int score;
 
-  SongFinalScore({required this.score});
+  const QuizFinalScore({super.key, required this.score});
 
   @override
   Widget build(BuildContext context) {

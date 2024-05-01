@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
 import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/pages/song/song_final_score.dart';
+import 'package:kapout/pages/quiz/quiz_final_score.dart';
 
 
 class Quiz extends StatefulWidget {
@@ -46,7 +46,7 @@ void makePage() async{
     if(index >= _questions.length) {
       audioPlayer.stop();
       print("Score final: $finalScore");
-      Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  SongFinalScore(score: finalScore)));
+      Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  QuizFinalScore(score: finalScore)));
     }
 
     _questionFuture = Future.value(_questions[index]);
