@@ -1,39 +1,53 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kapout/models/song_model.dart';
+import 'package:kapout/repositories/song_repository.dart';
 
 class QuestionModel {
   final String? id;
-  final List<String> artists;
-  final String songName;
+  SongModel song;
   final List<String> propositions;
-  final String response;
+  final String answer;
   final String type;
-  final String firestoreName;
+  final int startTime;
 
-  const QuestionModel({
+  QuestionModel({
     this.id,
-    required this.artists,
-    required this.songName,
+    required this.song,
     required this.propositions,
-    required this.response,
+    required this.answer,
     required this.type,
-    required this.firestoreName,
+    required this.startTime
   });
 
-  
+  static Future<QuestionModel> _initialize(QuestionModel question,  List<String> questionsData) async {
 
-  factory SongModel.fromMap(Map<String, dynamic> map, String id) {
-    return SongModel(
+    for (String songId in questionsData) {
+      try {
+        SongModel song =
+            await SongRepository.instance.getSong(songId);
+        question.song = song;
+      } catch (error) {
+        print("Error fetching question: $songId - $error");
+        // You can also consider re-throwing the error or handling it differently
+      }
+    }
+    return question;
+  }
+
+
+  static Future<QuestionModel> fromMap(Map<String, dynamic> map, String id) async {
+
+    return QuestionModel(
       id: id,
-      artists: List<String>.from(map['artists'] ?? []),
-      songName: map['songName'],
+      song:  await SongRepository.instance.getSong(map['song']),
       propositions: List<String>.from(map['propositions'] ?? []),
-      response: map['response'],
+      answer: map['answer'],
       type: map['type'],
-      firestoreName: map['firestoreName'],
+      startTime: map['startTime']
     );
   }
 
-  factory SongModel.fromSnapshot(DocumentSnapshot snapshot) {
-    return SongModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
+  static Future<QuestionModel> fromSnapshot(DocumentSnapshot snapshot) async {
+    return await QuestionModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
   }
 }

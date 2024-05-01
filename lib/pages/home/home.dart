@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kapout/constants.dart';
-import 'package:kapout/models/quizz_model.dart';
-import 'package:kapout/pages/song/song_quizz.dart';
-import 'package:kapout/repositories/quizz_repository.dart';
+import 'package:kapout/models/quiz_model.dart';
+import 'package:kapout/pages/song/quiz.dart';
+import 'package:kapout/repositories/quiz_repository.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,89 +15,87 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<QuizzModel>> _quizzs;
-  late List<QuizzModel> _quizz;
+  late Future<List<Future<QuizModel>>> _quizzs;
+  late List<Future<QuizModel>> _quizz;
 
   @override
   void initState() {
     super.initState();
-    _quizzs = QuizzRepository.instance.getQuizzs();
+    _quizzs = QuizRepository.instance.allQuizz();
   }
 
-
-Widget containerTest(String name, String nbQuestions, String quizzId) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SongQuizz(quizzId: quizzId)));
-    },
-    child: Container(
-      height: 80,
-      width: 350,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            // changes position of shadow
-          ),
-        ],
-      ),
-      child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: champagePink_900,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: const Center(
-                  child: Icon(
-                    PhosphorIconsBold.vinylRecord,
-                    color: Colors.white,
-                    size: 35.0,
+  Widget containerTest(Future<QuizModel> quiz, String name, String nbQuestions, String quizzId) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => Quiz(quiz: quiz)));
+      },
+      child: Container(
+        height: 80,
+        width: 350,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              // changes position of shadow
+            ),
+          ],
+        ),
+        child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: champagePink_900,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      PhosphorIconsBold.vinylRecord,
+                      color: Colors.white,
+                      size: 35.0,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 200,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style:  const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '$nbQuestions questions',
-                      style: const TextStyle(
-                        fontSize: 16,
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
+                      Text(
+                        '$nbQuestions questions',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              const Icon(
-                Icons.play_arrow,
-                color: Colors.grey,
-              ),
-            ],
-          )),
-    ),
-  );
-}
-
-
+                const SizedBox(width: 10),
+                const Icon(
+                  Icons.play_arrow,
+                  color: Colors.grey,
+                ),
+              ],
+            )),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +158,7 @@ Widget containerTest(String name, String nbQuestions, String quizzId) {
                             style: TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                           Text(
-                            'Quizz 1',
+                            'Quiz 1',
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
@@ -176,36 +174,53 @@ Widget containerTest(String name, String nbQuestions, String quizzId) {
             padding: EdgeInsets.all(20),
             child: Row(
               children: [
-                Text("Live Quizz",
+                Text("Live Quiz",
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          FutureBuilder(
+          FutureBuilder<List<Future<QuizModel>>>(
             future: _quizzs,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  _quizz = snapshot.data as List<QuizzModel>;
+                  List<Future<QuizModel>> quizzFutures = snapshot.data!;
                   return Column(
-                    children: _quizz.map((quizz) {
-                      return Column(
-                        children: [
-                          containerTest(
-                            quizz.name,
-                            quizz.songs.length.toString(),
-                            quizz.id!,
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      );
-                    }).toList(),
+                    children: [
+                      for (Future<QuizModel> quizzFuture in quizzFutures)
+                        FutureBuilder<QuizModel>(
+                          future: quizzFuture,
+                          builder: (context, quizzSnapshot) {
+                            if (quizzSnapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (quizzSnapshot.hasData) {
+                                QuizModel quizz = quizzSnapshot.data!;
+                                return Column(
+                                  children: [
+                                    containerTest(
+                                      quizzFuture,
+                                      quizz.name,
+                                      quizz.questions.length.toString(),
+                                      quizz.id!,
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
+                                );
+                              } else if (quizzSnapshot.hasError) {
+                                return Text(
+                                    "Error loading quiz: ${quizzSnapshot.error}");
+                              }
+                            }
+                            return CircularProgressIndicator(); // Loading indicator while waiting for each quiz to load
+                          },
+                        ),
+                    ],
                   );
                 }
               }
-              return const CircularProgressIndicator();
+              return CircularProgressIndicator(); // Loading indicator while waiting for the list of quizzes to load
             },
           ),
         ],
@@ -213,4 +228,3 @@ Widget containerTest(String name, String nbQuestions, String quizzId) {
     );
   }
 }
-

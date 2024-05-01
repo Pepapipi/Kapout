@@ -7,20 +7,20 @@ class SongRepository {
   final _db = FirebaseFirestore.instance;
   
   Future<List<SongModel>> getSongs() async {
-    final songs = await _db.collection('Songs').get();
+    final songs = await _db.collection('Song').get();
     return songs.docs.map((e) => SongModel.fromSnapshot(e)).toList();
   }
 
   Future<void> addSong(Map<String, dynamic> song) async {
-    await _db.collection('Songs').add(song);
+    await _db.collection('Song').add(song);
   }
 
   Future<void> updateSong(String id, Map<String, dynamic> song) async {
-    await _db.collection('Songs').doc(id).update(song);
+    await _db.collection('Song').doc(id).update(song);
   }
 
   Future<void> deleteSong(String id) async {
-    await _db.collection('Songs').doc(id).delete();
+    await _db.collection('Song').doc(id).delete();
   }
 
   /*Future<Map<String, dynamic>> getSong(String id) async {
@@ -29,7 +29,7 @@ class SongRepository {
   }*/
 
    Future<SongModel> getSong(String id) async {
-    final song = await _db.collection('Songs').doc(id).get();
+    final song = await _db.collection('Song').doc(id).get();
     return SongModel.fromSnapshot(song);
    }
 }

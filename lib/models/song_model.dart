@@ -1,30 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kapout/models/artist_model.dart';
+import 'package:kapout/repositories/artist_repository.dart';
 
 class SongModel {
   final String? id;
   final List<ArtistModel> artists;
   final String name;
-  final String? url;
+  final String url;
 
   const SongModel({
     this.id,
     required this.artists,
     required this.name,
-    this.url
+    required this.url
   });
 
-  
 
   factory SongModel.fromMap(Map<String, dynamic> map, String id) {
+
+    List<ArtistModel> artists = [];
+    map['artists'].forEach((artistRef) {
+      ArtistRepository.instance.getArtist(artistRef).then((artist) {
+        artists.add(artist);
+      });
+    });
+
     return SongModel(
       id: id,
-      artists: List<String>.from(map['artists'] ?? []),
-      songName: map['songName'],
-      propositions: List<String>.from(map['propositions'] ?? []),
-      response: map['response'],
-      type: map['type'],
-      firestoreName: map['firestoreName'],
+      artists: artists,
+      name: map['name'],
+      url: map['url'],
     );
   }
 
