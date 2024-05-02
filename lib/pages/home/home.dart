@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/pages/quiz/quiz.dart';
+import 'package:kapout/pages/quiz/quiz_preview.dart';
 import 'package:kapout/repositories/quiz_repository.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -27,8 +27,8 @@ class _HomePageState extends State<HomePage> {
   Widget containerTest(Future<QuizModel> quiz, String name, String nbQuestions, String quizzId) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => Quiz(quiz: quiz)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => QuizPreview(quiz: quiz)));
       },
       child: Container(
         height: 80,

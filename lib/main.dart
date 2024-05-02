@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:kapout/pages/quiz/quiz_preview.dart';
+import 'package:kapout/pages/home/home.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding =  WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
    await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyAFJjhB4v7kJKO9jJqMiTCgC9fqlsdrTtg", // paste your api key here
@@ -12,6 +14,7 @@ void main() async {
       projectId: "kapout-f095f", //paste your project id here
     ),
   );
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: QuizPreview(),
+      home: const HomePage(),
     );
   }
 }
