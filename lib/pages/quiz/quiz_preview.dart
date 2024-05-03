@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/models/quiz_model.dart';
+import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/pages/quiz/quiz.dart';
 
 class QuizPreview extends StatefulWidget {
@@ -31,6 +33,7 @@ class _QuizPreviewState extends State<QuizPreview> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBarPage(),
       appBar: AppBar(
         title: null,
         actions: [

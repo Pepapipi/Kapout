@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_preview.dart';
@@ -225,6 +226,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBarPage(),
     );
   }
 }
