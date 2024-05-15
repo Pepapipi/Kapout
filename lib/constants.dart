@@ -56,3 +56,6 @@ const Color dutchWhite_600 = Color.fromRGBO(191, 161, 135,1);
 const Color dutchWhite_700 = Color.fromRGBO(181, 151, 125,1);
 const Color dutchWhite_800 = Color.fromRGBO(171, 141, 115,1);
 const Color dutchWhite_900 = Color.fromRGBO(161, 131, 105,1);
+
+
+const Color primaryColor = Color(0xFF8D35E5);

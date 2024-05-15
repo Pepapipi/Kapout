@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/form_container_widget.dart';
+import 'package:kapout/constants.dart';
 import 'package:kapout/pages/home/home.dart';
 
 import '../../Services/firebase_auth_service.dart';
@@ -43,6 +44,11 @@ class _RegisterState extends State<Register> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Image(
+                image: AssetImage('assets/flag_512x512.png'),
+                width: 250,
+                height: 250,
+              ),
               const Text(
                 "S'inscrire",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
@@ -82,7 +88,7 @@ class _RegisterState extends State<Register> {
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -119,7 +125,7 @@ class _RegisterState extends State<Register> {
                       child: const Text(
                         "Se connecter",
                         style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
+                            color: primaryColor, fontWeight: FontWeight.bold),
                       ))
                 ],
               )
