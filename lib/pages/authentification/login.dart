@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:kapout/components/form_container_widget.dart';
 import 'package:kapout/components/toast.dart';
+import 'package:kapout/constants.dart';
 import 'package:kapout/pages/authentification/register.dart';
 import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/services/firebase_auth_service.dart';
@@ -37,10 +38,15 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, 
             children: [
+              const Image(
+                image: AssetImage('assets/flag_512x512.png'),
+                width: 250,
+                height: 250,
+              ),
               const Text(
                 "Se connecter",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
@@ -73,7 +79,7 @@ class _LoginState extends State<Login> {
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -110,7 +116,7 @@ class _LoginState extends State<Login> {
                       child: const Text(
                         "S'inscrire",
                         style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
+                            color: primaryColor, fontWeight: FontWeight.bold),
                       ))
                 ],
               )
