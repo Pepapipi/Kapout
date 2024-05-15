@@ -45,7 +45,6 @@ void initState() {
 void makePage() async{
     if(index >= _questions.length) {
       audioPlayer.stop();
-      print("Score final: $finalScore");
       Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  QuizFinalScore(score: finalScore)));
     }
 
@@ -71,10 +70,9 @@ Future<void> musiquePlayer(String fileName, int startTime) async {
       start = DateTime.now();
       await Future.delayed(const Duration(seconds: 15));
       await audioPlayer.pause();
-    }
-    // ignore: empty_catches
-    catch (e) {
-    }
+  } catch (e) {
+    print('Erreur lors de la lecture du fichier audio : $e');
+  }
 }
 
 Widget proposition(response, proposition) {

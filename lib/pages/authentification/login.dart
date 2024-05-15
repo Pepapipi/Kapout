@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:kapout/components/form_container_widget.dart';
 import 'package:kapout/components/toast.dart';
 import 'package:kapout/pages/authentification/register.dart';
+import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/services/firebase_auth_service.dart';
 
 class Login extends StatefulWidget {
@@ -134,7 +135,9 @@ class _LoginState extends State<Login> {
     });
     if (user != null) {
       showToast(message: "User is successfully connected");
-      Navigator.pushNamed(context, "/home");
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+    builder: (BuildContext context) => const HomePage(),
+  ));
     } else {
       showToast(message: "Some error happend");
     }

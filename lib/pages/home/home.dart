@@ -17,7 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Future<QuizModel>>> _quizzs;
-  late List<Future<QuizModel>> _quizz;
 
   @override
   void initState() {
@@ -195,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                           future: quizzFuture,
                           builder: (context, quizzSnapshot) {
                             if (quizzSnapshot.connectionState ==
-                                ConnectionState.done) {
+                                ConnectionState.done){
                               if (quizzSnapshot.hasData) {
                                 QuizModel quizz = quizzSnapshot.data!;
                                 return Column(
