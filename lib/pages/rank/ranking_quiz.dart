@@ -24,8 +24,9 @@ class _RankingQuizState extends State<RankingQuiz> {
     ];
     
     return Scaffold(
-      backgroundColor: primaryColor,
-
+      backgroundColor: primaryColorLight,
+      appBar: AppBar(
+      ),
       body:  Column(
         children: [
           const SizedBox(height: 45,),
@@ -43,32 +44,65 @@ class _RankingQuizState extends State<RankingQuiz> {
                horizontalSpacing: 3,
              ),
 
-
+            
             Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    color: Colors.white
                   ),
-                  color: Colors.white
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: players.length,
-                    itemBuilder: (BuildContext context, index) {
-                      print(players[index]);
-                      final player = players[index];
-                      return ListTile(
-                        leading: Text((index + 4).toString(), style: const TextStyle(fontSize: 20)),
-                        title: Text(player[0]),
-                        trailing: Text(player[1].toString(), style: const TextStyle(fontSize: 20)),
-                      );
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      itemCount: players.length,
+                      itemBuilder: (BuildContext context, index) {
+                        print(players[index]);
+                        final player = players[index];
+                        return ListTile(
+                          leading: Text((index + 4).toString(), style: const TextStyle(fontSize: 20)),
+                          title: Text(player[0]),
+                          trailing: Text(player[1].toString(), style: const TextStyle(fontSize: 20)),
+                        );
+                      },
+                    ),
                   ),
                 ),
+                
+                Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                    color: Colors.white
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                          leading: Text(104.toString(), style: const TextStyle(fontSize: 20)),
+                          title: Text('Dodo'),
+                          trailing: Text(15.toString(), style: const TextStyle(fontSize: 20)),
+                        )
+                  ),
+                ),
+
+                ],
+
               ),
             )
         ],

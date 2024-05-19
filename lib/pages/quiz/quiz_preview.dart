@@ -3,6 +3,7 @@ import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/models/quiz_model.dart';
 import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/pages/quiz/quiz.dart';
+import 'package:kapout/pages/rank/ranking_quiz.dart';
 
 class QuizPreview extends StatefulWidget {
   final Future<QuizModel> quiz;
@@ -103,13 +104,13 @@ class _QuizPreviewState extends State<QuizPreview> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   statCard(
-                      'Tentatives', '2', const AssetImage('assets/redo_512x512.png')),
+                      'Tentatives', '2', const AssetImage('assets/redo_512x512.png'),false,context),
                   const SizedBox(width: 20),
                   statCard('Meilleur score', '1200',
-                      const AssetImage('assets/flash_512x512.png')),
+                      const AssetImage('assets/flash_512x512.png'),true,context),
                   const SizedBox(width: 20),
                   statCard('Temps total', "5'",
-                      const AssetImage('assets/chrono_512x512.png')),
+                      const AssetImage('assets/chrono_512x512.png'),false,context),
                 ],
               ),
             ],
@@ -140,23 +141,30 @@ class _QuizPreviewState extends State<QuizPreview> {
   }
 }
 
-Widget statCard(String title, String value, AssetImage image) {
-  return Container(
-    width: 100,
-    height: 120,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      border: Border.all(color: const Color(0xFFABABAB)),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Image(image: image, width: 50, height: 50),
-        const SizedBox(height: 10),
-        Text(value,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-        Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-      ],
+Widget statCard(String title, String value, AssetImage image, bool openClassement, BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      if(openClassement) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RankingQuiz()));      }
+      // Add your stat card functionality here
+    },
+    child: Container(
+      width: 100,
+      height: 120,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFABABAB)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Image(image: image, width: 50, height: 50),
+          const SizedBox(height: 10),
+          Text(value,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        ],
+      ),
     ),
   );
 }

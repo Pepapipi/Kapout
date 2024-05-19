@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/pages/home/home.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:kapout/pages/rank/ranking_quiz.dart';
 
 class QuizFinalScore extends StatelessWidget {
   final int score;
@@ -78,12 +78,12 @@ class QuizFinalScore extends StatelessWidget {
                     ),
                   ),
                 ),
-                                Padding(
+                Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: GestureDetector(
                     onTap: () {
-                    Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const HomePage()));
-                  ;
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RankingQuiz()));
+                  
                     },
 
                       child: const Center(
