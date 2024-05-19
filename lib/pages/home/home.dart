@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                                     "Error loading quiz: ${quizzSnapshot.error}");
                               }
                             }
-                            return CircularProgressIndicator(); // Loading indicator while waiting for each quiz to load
+                            return const CircularProgressIndicator(); // Loading indicator while waiting for each quiz to load
                           },
                         ),
                     ],

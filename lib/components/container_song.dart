@@ -8,8 +8,9 @@ class ContainerSong extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      width: 150,
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.08,
+      margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -23,7 +24,7 @@ class ContainerSong extends StatelessWidget {
         ],
       ),
       child: Center(
-        child: Text(text),
+        child: Text(text, style: TextStyle(fontSize: 17),),
       ),
     );
   }
