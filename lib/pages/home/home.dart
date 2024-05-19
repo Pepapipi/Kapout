@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/quiz_model.dart';
@@ -220,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
               }
-              return CircularProgressIndicator(); // Loading indicator while waiting for the list of quizzes to load
+              return const CircularProgressIndicator(); // Loading indicator while waiting for the list of quizzes to load
             },
           ),
         ],

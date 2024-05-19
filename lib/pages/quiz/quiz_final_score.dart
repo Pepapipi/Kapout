@@ -11,15 +11,15 @@ class QuizFinalScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightSteelBlue_300,
+      backgroundColor: primaryColorLight,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              PhosphorIconsBold.handsClapping,
-              size: 100.0,
-              color: Colors.white,
+            const Image(
+                  image: AssetImage('assets/crown_512x512.png'),
+                  width: 250,
+                  height: 250,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -30,33 +30,73 @@ class QuizFinalScore extends StatelessWidget {
                     style: TextStyle(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   const Text(
-                    'Score final',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                    'Totouffe',
+                    style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(height: 20,),
                   Container(
                     padding: const EdgeInsets.all(20),
+                    width: 150,
                     decoration: BoxDecoration(
-                      color: champagePink_600,
+                      color: yellowCrown,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      '$score',
-                      style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: lightSteelBlue_600),
+                    child: Center(
+                      child: Text(
+                        '$score',
+                        style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                  Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const HomePage()));
-                // Code pour revenir au menu
-              },
-              child: const Text('Revenir au menu'),
-            ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: GestureDetector(
+                    onTap: () {
+                    Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const HomePage()));
+                  ;
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                          child: Text(
+                                  "Revenir au menu",
+                                  style: TextStyle(
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                    ),
+                  ),
+                ),
+                                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: GestureDetector(
+                    onTap: () {
+                    Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const HomePage()));
+                  ;
+                    },
+
+                      child: const Center(
+                          child: Text(
+                                  "Voir le classement",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
+                                      ),
+                                )),
+                    ),
+                  ),
+                
           ],
         ),
       ),

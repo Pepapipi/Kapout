@@ -35,101 +35,100 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Image(
-                image: AssetImage('assets/flag_512x512.png'),
-                width: 250,
-                height: 250,
-              ),
-              const Text(
-                "S'inscrire",
-                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              FormContainerWidget(
-                controller: _usernameController,
-                hintText: "Pseudo",
-                isPasswordField: false,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              FormContainerWidget(
-                controller: _emailController,
-                hintText: "Email",
-                isPasswordField: false,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              FormContainerWidget(
-                controller: _passwordController,
-                hintText: "Mot de passe",
-                isPasswordField: true,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              GestureDetector(
-                onTap: () {
-                  _signUp();
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                      child: isSigningUp
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text(
-                              "S'incrire",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Image(
+                  image: AssetImage('assets/flag_512x512.png'),
+                  width: 250,
+                  height: 250,
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Vous avez déjà un compte ?"),
-                  const SizedBox(
-                    width: 5,
+                const Text(
+                  "S'inscrire",
+                  style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                FormContainerWidget(
+                  controller: _usernameController,
+                  hintText: "Pseudo",
+                  isPasswordField: false,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                  controller: _emailController,
+                  hintText: "Email",
+                  isPasswordField: false,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                  controller: _passwordController,
+                  hintText: "Mot de passe",
+                  isPasswordField: true,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _signUp();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                        child: isSigningUp
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "S'incrire",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )),
                   ),
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()),
-                            (route) => false);
-                      },
-                      child: const Text(
-                        "Se connecter",
-                        style: TextStyle(
-                            color: primaryColor, fontWeight: FontWeight.bold),
-                      ))
-                ],
-              )
-            ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Vous avez déjà un compte ?"),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Login()),
+                              (route) => false);
+                        },
+                        child: const Text(
+                          "Se connecter",
+                          style: TextStyle(
+                              color: primaryColor, fontWeight: FontWeight.bold),
+                        ))
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

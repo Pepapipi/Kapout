@@ -59,4 +59,5 @@ const Color dutchWhite_900 = Color.fromRGBO(161, 131, 105,1);
 
 
 const Color primaryColor = Color(0xFF8D35E5);
-const Color secondaryColor = Color(0xFFF9A825);
+const Color yellowCrown = Color(0xFFF9CD16);
+const Color primaryColorLight = Color(0xFFB175EE);
