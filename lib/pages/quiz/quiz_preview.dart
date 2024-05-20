@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz.dart';
+import 'package:kapout/pages/rank/ranking_quiz.dart';
+import 'package:kapout/repositories/user_quiz_repository.dart';
 
 class QuizPreview extends StatefulWidget {
   final Future<QuizModel> quiz;
@@ -15,6 +18,8 @@ class QuizPreview extends StatefulWidget {
 
 class _QuizPreviewState extends State<QuizPreview> {
   late QuizModel _quiz;
+  late Future<UserQuizModel> userQuizFuture;
+  late UserQuizModel? userQuiz;
 
   @override
   void initState() {
@@ -22,6 +27,7 @@ class _QuizPreviewState extends State<QuizPreview> {
     widget.quiz.then((quiz) {
       setState(() {
         _quiz = quiz;
+        getStats();
       });
     }).catchError((error) {
       print("Error fetching quiz: $error");
@@ -29,9 +35,17 @@ class _QuizPreviewState extends State<QuizPreview> {
     });
   }
 
+  void getStats() async {
+    userQuizFuture = UserQuizRepository.instance
+        .getUserQuiz(FirebaseAuth.instance.currentUser!.uid, _quiz.id!);
+    userQuizFuture.then((value) => userQuiz = value).catchError((error) {
+      userQuiz = null;
+      print("Error fetching user quiz: $error");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       bottomNavigationBar: BottomNavigationBarPage(),
       appBar: AppBar(
@@ -61,7 +75,8 @@ class _QuizPreviewState extends State<QuizPreview> {
                 height: 169,
               ),
               Text(_quiz.name,
-                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(
+                      fontSize: 36, fontWeight: FontWeight.bold)),
               Text('Créé par Totouffe',
                   style: TextStyle(
                       fontSize: 16,
@@ -74,7 +89,8 @@ class _QuizPreviewState extends State<QuizPreview> {
             child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => Quiz(quiz: widget.quiz),));
+                    builder: (BuildContext context) => Quiz(quiz: widget.quiz, userQuiz: userQuiz),
+                  ));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B2CF5),
@@ -99,18 +115,69 @@ class _QuizPreviewState extends State<QuizPreview> {
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  statCard(
-                      'Tentatives', '2', const AssetImage('assets/redo_512x512.png')),
-                  const SizedBox(width: 20),
-                  statCard('Meilleur score', '1200',
-                      const AssetImage('assets/flash_512x512.png')),
-                  const SizedBox(width: 20),
-                  statCard('Temps total', "5'",
-                      const AssetImage('assets/chrono_512x512.png')),
-                ],
+              FutureBuilder(
+                future: userQuizFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      UserQuizModel _userQuiz = snapshot.data!;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          statCard(
+                              'Tentatives',
+                              _userQuiz.attempts.toString(),
+                              const AssetImage('assets/redo_512x512.png'),
+                             ),
+                          const SizedBox(width: 20),
+                          statCard(
+                              'Meilleur score',
+                              _userQuiz.bestScore.toString(),
+                              const AssetImage('assets/flash_512x512.png'),
+                              context,
+                              _quiz.id,
+                              userQuiz,),
+                          const SizedBox(width: 20),
+                          statCard(
+                              'Temps total',
+                              "${_userQuiz.totalTime}'",
+                              const AssetImage('assets/chrono_512x512.png'),
+                              ),
+                        ],
+                      );
+                    }
+                     return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          statCard(
+                              'Tentatives',
+                              '0',
+                              const AssetImage('assets/redo_512x512.png'),
+                             ),
+                          const SizedBox(width: 20),
+                          statCard(
+                              'Meilleur score',
+                              '0',
+                              const AssetImage('assets/flash_512x512.png'),
+                              context,
+                              _quiz.id,
+                              userQuiz),
+                          const SizedBox(width: 20),
+                          statCard(
+                              'Temps total',
+                              "0",
+                              const AssetImage('assets/chrono_512x512.png')
+                              ),
+                        ],
+                      );
+
+                  }
+                 
+                    return const CircularProgressIndicator();
+                  
+                  
+                 
+                },
               ),
             ],
           ),
@@ -126,7 +193,7 @@ class _QuizPreviewState extends State<QuizPreview> {
                     border: Border.all(color: Colors.grey),
                   ),
                   child: const Padding(
-                    padding:  EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: Icon(Icons.ios_share_rounded,
                         color: Color(0xFF8B2CF5), size: 30.0),
                   ),
@@ -140,23 +207,33 @@ class _QuizPreviewState extends State<QuizPreview> {
   }
 }
 
-Widget statCard(String title, String value, AssetImage image) {
-  return Container(
-    width: 100,
-    height: 120,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      border: Border.all(color: const Color(0xFFABABAB)),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Image(image: image, width: 50, height: 50),
-        const SizedBox(height: 10),
-        Text(value,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-        Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-      ],
+Widget statCard(String title, String value, AssetImage image, [BuildContext? context, String? idQuiz, UserQuizModel? userQuiz]) {
+  return GestureDetector(
+    onTap: () {
+      if (idQuiz != null) {
+        Navigator.of(context!).push(MaterialPageRoute(
+            builder: (BuildContext context) => RankingQuiz(userQuiz:userQuiz,idQuiz: idQuiz)));
+      }
+      // Add your stat card functionality here
+    },
+    child: Container(
+      width: 100,
+      height: 120,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFABABAB)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Image(image: image, width: 50, height: 50),
+          const SizedBox(height: 10),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        ],
+      ),
     ),
   );
 }

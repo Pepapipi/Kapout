@@ -36,7 +36,7 @@ class BottomNavigationBarPage extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => const QuizFinalScore(score: 18,),
+                    builder: (BuildContext context) => const HomePage(),
                   ));
                 },
                 child: Image.asset('assets/navbar/shield_violet.png',
@@ -53,7 +53,7 @@ class BottomNavigationBarPage extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => const HomePage(),
+                    builder: (BuildContext context) => HomePage(),
                   ));
                 },
                 child: Image.asset('assets/navbar/man.png',

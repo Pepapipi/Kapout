@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
@@ -6,11 +7,13 @@ import 'package:kapout/components/question_container.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
+import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
 
 class Quiz extends StatefulWidget {
   Future<QuizModel> quiz;
-  Quiz({Key? key, required this.quiz}) : super(key: key);
+  UserQuizModel? userQuiz;
+  Quiz({Key? key, required this.quiz, required this.userQuiz}) : super(key: key);
 
   @override
   State<Quiz> createState() => _QuizzState();
@@ -18,6 +21,7 @@ class Quiz extends StatefulWidget {
 
 class _QuizzState extends State<Quiz> {
   late Future<QuestionModel>? _questionFuture;
+  UserQuizModel? userQuiz;
 
   List<QuestionModel> _questions = []; // Initialiser _songs
   int finalScore = 0;
@@ -25,15 +29,19 @@ class _QuizzState extends State<Quiz> {
   int index = 0;
 
   late QuestionModel _question;
-  late DateTime start = DateTime.now();
+  late QuizModel quiz;
+  late DateTime start;
   final audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
+    start = DateTime.now();
+    userQuiz = widget.userQuiz;
     _questionFuture = null;
     widget.quiz.then((quiz) {
       setState(() {
+        this.quiz = quiz;
         _questions = quiz.questions;
         makePage();
       });
@@ -46,10 +54,11 @@ class _QuizzState extends State<Quiz> {
   void makePage() async {
     audioPlayer.stop();
     if (index >= _questions.length) {
+
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-              QuizFinalScore(score: finalScore)));
-    }
+                QuizFinalScore(score: finalScore, userQuiz: userQuiz , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
+          }
     _questionFuture = Future.value(_questions[index]);
     _questionFuture!.then((questionModel) {
       musiquePlayer(questionModel.song.url, questionModel.startTime);
