@@ -128,22 +128,21 @@ class _QuizPreviewState extends State<QuizPreview> {
                               'Tentatives',
                               _userQuiz.attempts.toString(),
                               const AssetImage('assets/redo_512x512.png'),
-                              false,
-                              context),
+                             ),
                           const SizedBox(width: 20),
                           statCard(
                               'Meilleur score',
                               _userQuiz.bestScore.toString(),
                               const AssetImage('assets/flash_512x512.png'),
-                              true,
-                              context),
+                              context,
+                              _quiz.id,
+                              userQuiz,),
                           const SizedBox(width: 20),
                           statCard(
                               'Temps total',
                               "${_userQuiz.totalTime}'",
                               const AssetImage('assets/chrono_512x512.png'),
-                              false,
-                              context),
+                              ),
                         ],
                       );
                     }
@@ -154,22 +153,21 @@ class _QuizPreviewState extends State<QuizPreview> {
                               'Tentatives',
                               '0',
                               const AssetImage('assets/redo_512x512.png'),
-                              false,
-                              context),
+                             ),
                           const SizedBox(width: 20),
                           statCard(
                               'Meilleur score',
                               '0',
                               const AssetImage('assets/flash_512x512.png'),
-                              true,
-                              context),
+                              context,
+                              _quiz.id,
+                              userQuiz),
                           const SizedBox(width: 20),
                           statCard(
                               'Temps total',
                               "0",
-                              const AssetImage('assets/chrono_512x512.png'),
-                              false,
-                              context),
+                              const AssetImage('assets/chrono_512x512.png')
+                              ),
                         ],
                       );
 
@@ -209,13 +207,12 @@ class _QuizPreviewState extends State<QuizPreview> {
   }
 }
 
-Widget statCard(String title, String value, AssetImage image,
-    bool openClassement, BuildContext context) {
+Widget statCard(String title, String value, AssetImage image, [BuildContext? context, String? idQuiz, UserQuizModel? userQuiz]) {
   return GestureDetector(
     onTap: () {
-      if (openClassement) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) => RankingQuiz()));
+      if (idQuiz != null) {
+        Navigator.of(context!).push(MaterialPageRoute(
+            builder: (BuildContext context) => RankingQuiz(userQuiz:userQuiz,idQuiz: idQuiz)));
       }
       // Add your stat card functionality here
     },

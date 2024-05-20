@@ -38,7 +38,7 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
       );
     } else {
       //Si UserQuiz n'est pas null, on met à jour le score et le temps
-      userQuiz!.bestScore = widget.score;
+      widget.score > userQuiz!.bestScore! ? userQuiz!.bestScore = widget.score : userQuiz!.bestScore = userQuiz!.bestScore;
       userQuiz!.totalTime = widget.totalTime;
       userQuiz!.attempts = userQuiz!.attempts + 1;
     }
@@ -121,7 +121,7 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
                   padding: const EdgeInsets.all(12.0),
                   child: GestureDetector(
                     onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RankingQuiz()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RankingQuiz(userQuiz: userQuiz,idQuiz: widget.idQuiz,)));
                   
                     },
 

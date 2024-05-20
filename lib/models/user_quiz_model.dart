@@ -31,4 +31,12 @@ class UserQuizModel {
    factory UserQuizModel.fromSnapshot(DocumentSnapshot snapshot) {
     return UserQuizModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
   }
+
+  Future<String> getUsername() async {
+    // Assuming you have a collection named 'users' in Firestore
+    final userDoc = await FirebaseFirestore.instance.collection('User').doc(idUser).get();
+    final userData = userDoc.data();
+    final username = userData?['name'] as String;
+    return username;
+  }
 }
