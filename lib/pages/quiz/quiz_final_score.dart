@@ -4,14 +4,16 @@ import 'package:kapout/constants.dart';
 import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/pages/rank/ranking_quiz.dart';
+import 'package:kapout/repositories/user_quiz_repository.dart';
 
 class QuizFinalScore extends StatefulWidget {
   final int score;
   final int totalTime;
+  final String idQuiz;
   UserQuizModel? userQuiz;
 
 
-  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.userQuiz});
+  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.userQuiz, required this.idQuiz});
 
   @override
   State<QuizFinalScore> createState() => _QuizFinalScoreState();
@@ -24,6 +26,25 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
   void initState() {
     super.initState();
     userQuiz = widget.userQuiz;
+
+    //Si UserQuiz est null, on crée un UserQuizModel
+    if (userQuiz == null) {
+      userQuiz = UserQuizModel(
+        idUser: FirebaseAuth.instance.currentUser!.uid,
+        idQuiz: widget.idQuiz,
+        bestScore: widget.score,
+        totalTime: widget.totalTime,
+        attempts: 1
+      );
+    } else {
+      //Si UserQuiz n'est pas null, on met à jour le score et le temps
+      userQuiz!.bestScore = widget.score;
+      userQuiz!.totalTime = widget.totalTime;
+      userQuiz!.attempts = userQuiz!.attempts + 1;
+    }
+
+    //On enregistre le UserQuizModel
+    UserQuizRepository.instance.saveUserQuiz(userQuiz!);
   }
 
   @override

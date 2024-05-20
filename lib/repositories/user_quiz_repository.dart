@@ -13,4 +13,23 @@ class UserQuizRepository {
       .get();
     return UserQuizModel.fromSnapshot(userQuiz.docs.first);
   }
+
+  Future<void> saveUserQuiz(UserQuizModel userQuiz) async {
+    if (userQuiz.id == null) {
+      await _db.collection('UserQuiz').add(
+        {
+        'idUser': userQuiz.idUser,
+        'idQuiz': userQuiz.idQuiz,
+        'bestScore': userQuiz.bestScore,
+        'attempts': userQuiz.attempts,
+        'totalTime': userQuiz.totalTime,
+      });
+    } else {
+      await _db.collection('UserQuiz').doc(userQuiz.id).update({
+        'bestScore': userQuiz.bestScore,
+        'attempts': userQuiz.attempts,
+        'totalTime': userQuiz.totalTime,
+      });
+    }
+  }
 }

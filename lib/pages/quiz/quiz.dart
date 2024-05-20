@@ -29,17 +29,19 @@ class _QuizzState extends State<Quiz> {
   int index = 0;
 
   late QuestionModel _question;
-  late DateTime start = DateTime.now();
+  late QuizModel quiz;
+  late DateTime start;
   final audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
+    start = DateTime.now();
     userQuiz = widget.userQuiz;
-    print("LA ICI $userQuiz");
     _questionFuture = null;
     widget.quiz.then((quiz) {
       setState(() {
+        this.quiz = quiz;
         _questions = quiz.questions;
         makePage();
       });
@@ -55,7 +57,7 @@ class _QuizzState extends State<Quiz> {
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-                QuizFinalScore(score: finalScore, userQuiz: userQuiz , totalTime: start.difference(DateTime.now()).inSeconds.abs())));
+                QuizFinalScore(score: finalScore, userQuiz: userQuiz , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
           }
     _questionFuture = Future.value(_questions[index]);
     _questionFuture!.then((questionModel) {
