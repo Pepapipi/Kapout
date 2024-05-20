@@ -19,7 +19,7 @@ class QuizPreview extends StatefulWidget {
 class _QuizPreviewState extends State<QuizPreview> {
   late QuizModel _quiz;
   late Future<UserQuizModel> userQuizFuture;
-  late UserQuizModel userQuiz;
+  late UserQuizModel? userQuiz;
 
   @override
   void initState() {
@@ -39,6 +39,7 @@ class _QuizPreviewState extends State<QuizPreview> {
     userQuizFuture = UserQuizRepository.instance
         .getUserQuiz(FirebaseAuth.instance.currentUser!.uid, _quiz.id!);
     userQuizFuture.then((value) => userQuiz = value).catchError((error) {
+      userQuiz = null;
       print("Error fetching user quiz: $error");
     });
   }
@@ -88,7 +89,7 @@ class _QuizPreviewState extends State<QuizPreview> {
             child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => Quiz(quiz: widget.quiz),
+                    builder: (BuildContext context) => Quiz(quiz: widget.quiz, userQuiz: userQuiz),
                   ));
                 },
                 style: ElevatedButton.styleFrom(

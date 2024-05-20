@@ -1,12 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/constants.dart';
+import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/pages/rank/ranking_quiz.dart';
 
-class QuizFinalScore extends StatelessWidget {
+class QuizFinalScore extends StatefulWidget {
   final int score;
+  final int totalTime;
+  UserQuizModel? userQuiz;
 
-  const QuizFinalScore({super.key, required this.score});
+
+  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.userQuiz});
+
+  @override
+  State<QuizFinalScore> createState() => _QuizFinalScoreState();
+}
+
+class _QuizFinalScoreState extends State<QuizFinalScore> {
+  UserQuizModel? userQuiz ;
+
+  @override
+  void initState() {
+    super.initState();
+    userQuiz = widget.userQuiz;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +61,7 @@ class QuizFinalScore extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        '$score',
+                        '${widget.score}',
                         style: const TextStyle(
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
