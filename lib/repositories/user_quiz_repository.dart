@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kapout/models/user_model.dart';
 import 'package:kapout/models/user_quiz_model.dart';
 
@@ -52,7 +51,6 @@ class UserQuizRepository {
     final userQuiz = await _db.collection('UserQuiz').where('idQuiz', isEqualTo: idQuizz).where('idUser', isEqualTo: idUser).get();
 
     final position = arrayUserQuiz.docs.indexWhere((doc) => doc.id == userQuiz.docs.first.id) + 1;
-    print(position);
     return position;
   }
 

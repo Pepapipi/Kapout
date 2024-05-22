@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CategoryModel{
   String name;
   String image;
-  List<String> quizzes; // En fait, je pense que le mieux est de mettre un String ici, et de faire un fetch des quizzes dans le constructeur
+  List<dynamic> quizzes; // En fait, je pense que le mieux est de mettre un String ici, et de faire un fetch des quizzes dans le constructeur
   CategoryModel({required this.name, required this.image, this.quizzes = const []});
 
   static CategoryModel fromMap(Map<String, dynamic> map,String id) {

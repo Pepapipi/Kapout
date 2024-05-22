@@ -27,7 +27,6 @@ class QuestionModel {
             await SongRepository.instance.getSong(songId);
         question.song = song;
       } catch (error) {
-        print("Error fetching question: $songId - $error");
         // You can also consider re-throwing the error or handling it differently
       }
     }

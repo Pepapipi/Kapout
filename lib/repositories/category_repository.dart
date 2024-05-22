@@ -1,21 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kapout/models/artist_model.dart';
+import 'package:kapout/models/category_model.dart';
 
 class CategoryRepository {
 
   static CategoryRepository get instance => CategoryRepository();
   final _db = FirebaseFirestore.instance;
   
-  Future<List<ArtistModel>> allCategories() async {
-    final artists = await _db.collection('Category').get();
-    return artists.docs.map((e) => ArtistModel.fromSnapshot(e)).toList();
+  Future<List<CategoryModel>> allCategories() async {
+    final categories = await _db.collection('Category').get();
+    return categories.docs.map((e) => CategoryModel.fromSnapshot(e)).toList();
   }
 
   
-  Future<ArtistModel> getCategory(String id) async {
-  final artist = await _db.collection('Category').doc(id).get();
-  return ArtistModel.fromSnapshot(artist);
+  Future<CategoryModel> getCategory(String id) async {
+  final category = await _db.collection('Category').doc(id).get();
+  return CategoryModel.fromSnapshot(category);
   }
-
 
 }

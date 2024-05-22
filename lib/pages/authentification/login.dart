@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:kapout/components/form_container_widget.dart';
 import 'package:kapout/components/toast.dart';
 import 'package:kapout/constants.dart';

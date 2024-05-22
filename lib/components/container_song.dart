@@ -24,7 +24,7 @@ class ContainerSong extends StatelessWidget {
         ],
       ),
       child: Center(
-        child: Text(text, style: TextStyle(fontSize: 17),),
+        child: Text(text, style: const TextStyle(fontSize: 17),),
       ),
     );
   }
