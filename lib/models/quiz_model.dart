@@ -21,7 +21,6 @@ class QuizModel {
             await QuestionRepository.instance.getQuestion(questionId);
         questions.add(question);
       } catch (error) {
-        print("Error fetching question: $questionId - $error");
         // You can also consider re-throwing the error or handling it differently
       }
     }

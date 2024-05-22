@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kapout/pages/authentification/login.dart';
+import 'package:kapout/pages/category/main_category.dart';
 import 'package:kapout/pages/home/home.dart';
-import 'package:kapout/pages/quiz/quiz_final_score.dart';
 import 'package:kapout/services/firebase_auth_service.dart';
 
 class BottomNavigationBarPage extends StatelessWidget {
+  const BottomNavigationBarPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +38,7 @@ class BottomNavigationBarPage extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => const HomePage(),
+                    builder: (BuildContext context) =>  const MainCategory(),
                   ));
                 },
                 child: Image.asset('assets/navbar/shield_violet.png',
@@ -53,7 +55,7 @@ class BottomNavigationBarPage extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => HomePage(),
+                    builder: (BuildContext context) => const HomePage(),
                   ));
                 },
                 child: Image.asset('assets/navbar/man.png',

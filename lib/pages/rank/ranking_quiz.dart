@@ -50,7 +50,6 @@ class _RankingQuizState extends State<RankingQuiz> {
         bestScores = bS;
       });
     } catch (e) {
-      print('Erreur lors du chargement des données de classement: $e');
       setState(() {
         positionPlayer = ["VIDE", "VIDE", "VIDE"];
       });
@@ -63,7 +62,7 @@ class _RankingQuizState extends State<RankingQuiz> {
       backgroundColor: primaryColorLight,
       appBar: AppBar(
       ),
-      body: topPlayers.isEmpty ? CircularProgressIndicator() : Column(
+      body: topPlayers.isEmpty ? const CircularProgressIndicator() : Column(
         children: [
           const SizedBox(height: 45,),
            Podium(
@@ -142,7 +141,7 @@ class _RankingQuizState extends State<RankingQuiz> {
             )
         ],
       ),
-    bottomNavigationBar: BottomNavigationBarPage(),
+    bottomNavigationBar: const BottomNavigationBarPage(),
 
     );
   }

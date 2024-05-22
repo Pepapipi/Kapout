@@ -45,9 +45,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     User? firebaseUser = FirebaseAuth.instance.currentUser;
 
-    // Check if user is already logged in
-    bool isLoggedIn = false; // Replace with your login logic
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
