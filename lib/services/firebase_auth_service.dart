@@ -1,14 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kapout/repositories/user_repository.dart';
 
 import '../components/toast.dart';
 class FirebaseAuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<User?> signUpWithEmailAndPassword(String email, String password) async {
+  Future<User?> signUpWithEmailAndPassword(String email, String password, String userName) async {
 
     try {
       UserCredential credential =await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserRepository.instance.createUser(FirebaseAuth.instance.currentUser!.uid, userName, email);
       return credential.user;
     } on FirebaseAuthException catch (e) {
 

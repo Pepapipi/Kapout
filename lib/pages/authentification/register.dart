@@ -142,8 +142,9 @@ class _RegisterState extends State<Register> {
 
     String email = _emailController.text;
     String password = _passwordController.text;
+    String userName = _usernameController.text;
 
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    User? user = await _auth.signUpWithEmailAndPassword(email, password, userName);
 
     setState(() {
       isSigningUp = false;
