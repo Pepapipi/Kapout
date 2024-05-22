@@ -12,9 +12,8 @@ class UserRepository {
   }
 
   Future<void> createUser(String userId, String userName, String userMail) async {
-    await _db.collection('User').add(
+    await _db.collection('User').doc(userId).set(
       {
-        'id': userId,
         'name': userName,
         'mail': userMail,
         'icon': '', // mettre une icone par défaut
