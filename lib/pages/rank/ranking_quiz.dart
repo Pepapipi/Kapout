@@ -101,7 +101,7 @@ class _RankingQuizState extends State<RankingQuiz> {
                         return ListTile(
                           leading: Text((index + 4).toString(), style: const TextStyle(fontSize: 20)),
                           title: Text(player[0]),
-                          trailing: Text(player[1], style: const TextStyle(fontSize: 20)),
+                          trailing: Text(player[1].toString(), style: const TextStyle(fontSize: 20)),
                         );
                       },
                     ),
