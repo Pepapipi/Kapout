@@ -1,15 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
-import 'package:kapout/components/question_container.dart';
-import 'package:kapout/constants.dart';
 import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
 import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
 import 'package:kapout/pages/quiz/widget_stack_question.dart';
+import 'package:kapout/repositories/question_repository.dart';
 
 class Quiz extends StatefulWidget {
   Future<QuizModel> quiz;
@@ -41,9 +39,17 @@ class _QuizzState extends State<Quiz> {
     userQuiz = widget.userQuiz;
     _questionFuture = null;
     widget.quiz.then((quiz) {
+
+      List<QuestionModel> questions = [];
+      for (String idQuestion in quiz.questions) {
+        QuestionRepository.instance.getQuestion(idQuestion).then((question) {
+          questions.add(question);
+        });
+      }
+
       setState(() {
         this.quiz = quiz;
-        _questions = quiz.questions;
+        _questions = questions;
         makePage();
       });
     }).catchError((error) {

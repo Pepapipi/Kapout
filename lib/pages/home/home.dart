@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _quizzs = QuizRepository.instance.allQuizz();
+    _quizzs = QuizRepository.instance.allQuizzes();
   }
 
   Widget containerTest(Future<QuizModel> quiz, String name, String nbQuestions, String quizzId) {

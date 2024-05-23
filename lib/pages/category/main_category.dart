@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/models/category_model.dart';
 import 'package:kapout/repositories/category_repository.dart';
+import 'package:kapout/services/firebase_storage_service.dart';
 
 class MainCategory extends StatefulWidget {
   
@@ -27,7 +28,7 @@ class _MainCategoryState extends State<MainCategory> {
     CategoryRepository.instance.allCategories().then((value) async {
       
       for (var i = 0; i < value.length; i++) {
-        imagesTamp.add(await getPicture(value[i].image));
+        imagesTamp.add(await FirebaseStorageService.instance.getAsset(value[i].image));
       }
 
       //Tableau des images
@@ -79,7 +80,7 @@ class _MainCategoryState extends State<MainCategory> {
                   ),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
-                    return buildRectangle(categories[index].name, images[index]);
+                    return buildRectangle(categories[index].name, images[index],);
                   },
                 ),
               ),
@@ -110,10 +111,6 @@ class _MainCategoryState extends State<MainCategory> {
       ),
     );
   }
-
-Future<String> getPicture(String path) async {
-    return await FirebaseStorage.instance.ref(path).getDownloadURL();
-}
 
 }
   //---------RECTANGLES--------------

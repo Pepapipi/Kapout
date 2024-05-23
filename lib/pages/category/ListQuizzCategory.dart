@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:kapout/models/quiz_model.dart';
+import 'package:kapout/pages/quiz/quiz.dart';
+import 'package:kapout/repositories/category_repository.dart';
+import 'package:kapout/repositories/quiz_repository.dart';
+import 'package:kapout/services/firebase_storage_service.dart';
 
 class ListQuizzCategoriePage extends StatefulWidget {
+
+  const ListQuizzCategoriePage({super.key});
+
   @override
   _ListQuizzCategoriePageState createState() => _ListQuizzCategoriePageState();
 }
 
 class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
   // Liste test des noms de quizz
-  List<String> itemsquizz = [
-    'Disney',
-    'Le roi lion',
-    'La reine des neiges',
-    'Blanche Neige',
-  ];
+  List<QuizModel> quizzes = [];
+  List<String> images = [];
 
   final String nomCategorie = 'Disney'; //Cela représente le nom de la catégorie
   //sur laquel l'utilisateur a cliqué
@@ -20,11 +24,35 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
   // Chemin vers le logo utilisé en haut à droite de la page
   final String imageLogoPath = 'assets/flag_256x256.png';
 
+  @override
+  void initState()  {
+    super.initState();
+    CategoryRepository.instance.getCategory('n9v5x6KjkBzoO7WNXhN9').then((value) async {
+        List<QuizModel> quizzesTamp = [];
+        List<String> imagesTamp = [];
+
+      for(String idQuiz in value.quizzes){
+        QuizModel quiz = await QuizRepository.instance.getQuiz(idQuiz);
+        await FirebaseStorageService.instance.getAsset(quiz.image!).then((value) {
+          imagesTamp.add(value);
+        }
+        );
+        quizzesTamp.add(await QuizRepository.instance.getQuiz(idQuiz));
+      }
+
+      setState(() {
+        quizzes = quizzesTamp;
+        images = imagesTamp;
+      });
+     
+    } );
+    //On récupère les quizz de la catégorie mais il 
+  }
+
   //---------------MAIN-----------
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(
             nomCategorie,
@@ -64,19 +92,19 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
                         2, // Espacement horizontal entre les colonnes
                     mainAxisSpacing: 2, // Espacement vertical entre les lignes
                     childAspectRatio:
-                        6 / 2, //Ratio entre hauteur/largeur des rectangles
+                       8 / 2, //Ratio entre hauteur/largeur des rectangles
                   ),
-                  itemCount: itemsquizz.length,
+                  itemCount: quizzes.length,
                   itemBuilder: (context, index) {
-                    return buildRectangle(index);
+                    return buildRectangle(quizzes[index].name, images[index], quizzes[index].bgColor!, quizzes[index].textColor!);
                   },
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
+    
   }
 
   //----------------BARRE DE RECHERCHES---------------
@@ -104,35 +132,33 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
 
   //---------RECTANGLES--------------
   // Widget pour les rectangles
-  Widget buildRectangle(int index) {
+  Widget buildRectangle(String name, String image, String bgColor, String textColor) {
     const TextStyle textStyle = TextStyle(
-      fontSize: 25, // Taille de police souhaitée
+      fontSize: 16, // Taille de police souhaitée
       fontWeight: FontWeight.bold, // Police en gras
       color: Colors.white, // Couleur du texte en blanc
     );
     return Container(
-      width: 60,
-      height: 50,
+      width: 10,
+      height: 30,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 2), // Contour noir
         borderRadius: BorderRadius.circular(10), // Bords arrondis
-        color: Colors.grey, // Couleur de fond (remplacer si nécessaire)
+        color: Colors.red, // Couleur de fond (remplacer si nécessaire)
       ),
       margin: const EdgeInsets.all(8),
       child: Row(
         children: [
           Container(
-            width: 120, // Largeur max de l'image
-            height: 120, // Hauteur max de l'image
+            width: 100, // Largeur max de l'image
+            height: 80, // Hauteur max de l'image
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 bottomLeft: Radius.circular(8),
               ),
               image: DecorationImage(
-                image: AssetImage('assets/quizzImage/' +
-                    itemsquizz[index] +
-                    '.png'), //récupération des images en fonction du nom du quizz
+                image: NetworkImage(image), //récupération des images en fonction du nom du quizz
                 fit: BoxFit.cover, // Ajustez l'image pour couvrir tout
                 // le conteneur
               ),
@@ -144,7 +170,7 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
               padding: const EdgeInsets.all(8.0),
               child: Align(
                 alignment: Alignment.topLeft, // Texte en haut gauche
-                child: Text(itemsquizz[index], style: textStyle), //récupération
+                child: Text(name, style: textStyle), //récupération
                 //des nom de quizz
               ),
             ),
@@ -155,6 +181,3 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
   }
 }
 
-void main() {
-  runApp(ListQuizzCategoriePage());
-}
