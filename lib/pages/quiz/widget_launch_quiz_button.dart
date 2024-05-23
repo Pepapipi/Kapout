@@ -4,10 +4,9 @@ import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz.dart';
 
 class LaunchQuizButton extends StatelessWidget {
-  final Future<QuizModel> quiz;
-  final UserQuizModel? userQuiz;
-
-  const LaunchQuizButton({Key? key, required this.quiz, this.userQuiz})
+  final String idQuiz;
+  
+  const LaunchQuizButton({Key? key, required this.idQuiz})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class LaunchQuizButton extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) =>
-                  Quiz(quiz: quiz, userQuiz: userQuiz),
+                  Quiz(idQuiz: idQuiz),
             ));
           },
           style: ElevatedButton.styleFrom(

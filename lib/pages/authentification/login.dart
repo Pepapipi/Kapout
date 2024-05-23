@@ -4,7 +4,7 @@ import 'package:kapout/components/form_container_widget.dart';
 import 'package:kapout/components/toast.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/pages/authentification/register.dart';
-import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/pages/category/main_category.dart';
 import 'package:kapout/services/firebase_auth_service.dart';
 
 class Login extends StatefulWidget {
@@ -142,7 +142,7 @@ class _LoginState extends State<Login> {
     if (user != null) {
       showToast(message: "User is successfully connected");
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-    builder: (BuildContext context) => const HomePage(),
+    builder: (BuildContext context) => const MainCategory(),
   ));
     } else {
       showToast(message: "Some error happend");

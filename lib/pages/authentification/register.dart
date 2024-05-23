@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/form_container_widget.dart';
 import 'package:kapout/constants.dart';
-import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/pages/category/main_category.dart';
 
 import '../../Services/firebase_auth_service.dart';
 import '../../components/toast.dart';
@@ -152,7 +152,7 @@ class _RegisterState extends State<Register> {
     if (user != null) {
       showToast(message: "User is successfully created");
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => const HomePage(),
+                    builder: (BuildContext context) => const MainCategory(),
                   ));
     } else {
       showToast(message: "Some error happend");

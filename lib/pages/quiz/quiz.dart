@@ -8,11 +8,12 @@ import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
 import 'package:kapout/pages/quiz/widget_stack_question.dart';
 import 'package:kapout/repositories/question_repository.dart';
+import 'package:kapout/repositories/quiz_repository.dart';
 
 class Quiz extends StatefulWidget {
-  Future<QuizModel> quiz;
-  UserQuizModel? userQuiz;
-  Quiz({Key? key, required this.quiz, required this.userQuiz}) : super(key: key);
+  
+  String idQuiz;
+  Quiz({Key? key, required this.idQuiz}) : super(key: key);
 
   @override
   State<Quiz> createState() => _QuizzState();
@@ -20,7 +21,6 @@ class Quiz extends StatefulWidget {
 
 class _QuizzState extends State<Quiz> {
   late Future<QuestionModel>? _questionFuture;
-  UserQuizModel? userQuiz;
 
   List<QuestionModel> _questions = []; // Initialiser _songs
   int finalScore = 0;
@@ -36,17 +36,15 @@ class _QuizzState extends State<Quiz> {
   void initState() {
     super.initState();
     start = DateTime.now();
-    userQuiz = widget.userQuiz;
     _questionFuture = null;
-    widget.quiz.then((quiz) {
-
+    QuizRepository.instance.getQuiz(widget.idQuiz).then((quiz)async {
       List<QuestionModel> questions = [];
       for (String idQuestion in quiz.questions) {
-        QuestionRepository.instance.getQuestion(idQuestion).then((question) {
+        await QuestionRepository.instance.getQuestion(idQuestion).then((question) {
           questions.add(question);
         });
       }
-
+      print(questions);
       setState(() {
         this.quiz = quiz;
         _questions = questions;
@@ -62,7 +60,7 @@ class _QuizzState extends State<Quiz> {
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-                QuizFinalScore(score: finalScore, userQuiz: userQuiz , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
+                QuizFinalScore(score: finalScore , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
           }
     _questionFuture = Future.value(_questions[index]);
     _questionFuture!.then((questionModel) {
@@ -82,7 +80,6 @@ class _QuizzState extends State<Quiz> {
       audioPlayer.play(UrlSource(downloadURL));
       start = DateTime.now();
     } catch (e) {
-      print('Erreur lors de la lecture du fichier audio : $e');
     }
   }
 

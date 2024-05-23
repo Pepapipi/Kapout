@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/user_quiz_model.dart';
-import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/pages/category/main_category.dart';
 import 'package:kapout/pages/rank/ranking_quiz.dart';
 import 'package:kapout/repositories/user_quiz_repository.dart';
 
@@ -10,10 +10,9 @@ class QuizFinalScore extends StatefulWidget {
   final int score;
   final int totalTime;
   final String idQuiz;
-  UserQuizModel? userQuiz;
 
 
-  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.userQuiz, required this.idQuiz});
+  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.idQuiz});
 
   @override
   State<QuizFinalScore> createState() => _QuizFinalScoreState();
@@ -25,10 +24,9 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
   @override
   void initState() {
     super.initState();
-    userQuiz = widget.userQuiz;
-
+    UserQuizRepository.instance.getUserQuiz(FirebaseAuth.instance.currentUser!.uid, widget.idQuiz).then((value) {
     //Si UserQuiz est null, on crée un UserQuizModel
-    if (userQuiz == null) {
+    if (value.id == null) {
       userQuiz = UserQuizModel(
         idUser: FirebaseAuth.instance.currentUser!.uid,
         idQuiz: widget.idQuiz,
@@ -38,6 +36,7 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
       );
     } else {
       //Si UserQuiz n'est pas null, on met à jour le score et le temps
+      userQuiz = value;
       widget.score > userQuiz!.bestScore! ? userQuiz!.bestScore = widget.score : userQuiz!.bestScore = userQuiz!.bestScore;
       userQuiz!.totalTime = widget.totalTime;
       userQuiz!.attempts = userQuiz!.attempts + 1;
@@ -45,6 +44,9 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
 
     //On enregistre le UserQuizModel
     UserQuizRepository.instance.saveUserQuiz(userQuiz!);
+    },);
+
+
   }
 
   @override
@@ -97,7 +99,7 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
                   padding: const EdgeInsets.all(12.0),
                   child: GestureDetector(
                     onTap: () {
-                    Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const HomePage()));
+                    Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const MainCategory()));
                   ;
                     },
                     child: Container(
