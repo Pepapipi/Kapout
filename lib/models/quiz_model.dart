@@ -10,6 +10,7 @@ class QuizModel {
   String? image;
   final String? bgColor;
   final String? textColor;
+  final String? idCreator;
 
   QuizModel({
     this.id,
@@ -19,6 +20,7 @@ class QuizModel {
     this.image,
     this.bgColor = 'FFFFFF', // Couleur par défaut
     this.textColor = '000000', // Couleur par défaut
+    this.idCreator
   });
 
 
@@ -32,6 +34,7 @@ class QuizModel {
       textColor: map['textColor'],
       nbContributions: map['nbContributions'],
       questions:  List<String>.from(map['questions'] ?? []),
+      idCreator: map['idCreator']
     );
 
     return quiz;

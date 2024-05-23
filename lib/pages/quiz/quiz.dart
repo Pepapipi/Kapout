@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
 import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
-import 'package:kapout/pages/quiz/widget_stack_question.dart';
+import 'package:kapout/pages/quiz/widgets/widget_stack_question.dart';
 import 'package:kapout/repositories/question_repository.dart';
 import 'package:kapout/repositories/quiz_repository.dart';
 
@@ -28,7 +27,7 @@ class _QuizzState extends State<Quiz> {
   int index = 0;
 
   late QuestionModel _question;
-  late QuizModel quiz;
+  late QuizModel quiz ;
   late DateTime start;
   final audioPlayer = AudioPlayer();
 
@@ -57,10 +56,10 @@ class _QuizzState extends State<Quiz> {
   void makePage() async {
     audioPlayer.stop();
     if (index >= _questions.length) {
-
+      print(quiz.id!);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-                QuizFinalScore(score: finalScore , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
+                QuizFinalScore(score: finalScore , idQuiz: quiz!.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
           }
     _questionFuture = Future.value(_questions[index]);
     _questionFuture!.then((questionModel) {

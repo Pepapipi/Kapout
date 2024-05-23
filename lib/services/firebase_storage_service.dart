@@ -8,4 +8,5 @@ class FirebaseStorageService {
   Future<String> getAsset(String path) async {
       return await FirebaseStorage.instance.ref(path).getDownloadURL();
   }
+  
 }
