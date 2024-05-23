@@ -4,6 +4,7 @@ import 'package:flutter_podium/flutter_podium.dart';
 import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/user_quiz_model.dart';
+import 'package:kapout/pages/rank/widget_top4_top10.dart';
 import 'package:kapout/repositories/user_quiz_repository.dart';
 
 class RankingQuiz extends StatefulWidget {
@@ -79,66 +80,7 @@ class _RankingQuizState extends State<RankingQuiz> {
                horizontalSpacing: 3,
              ),
 
-            
-            Expanded(
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                    color: Colors.white
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      itemCount: bestScores.length > 3 ? bestScores.length - 3 : 0,
-                      itemBuilder: (BuildContext context, index) {
-                        List<dynamic> player = bestScores.length > index+3 ? bestScores[index+3] : ["VIDE", "VIDE"];
-                        return ListTile(
-                          leading: Text((index + 4).toString(), style: const TextStyle(fontSize: 20)),
-                          title: Text(player[0]),
-                          trailing: Text(player[1].toString(), style: const TextStyle(fontSize: 20)),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
-                    color: Colors.white
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                          leading: Text(positionPlayer[0].toString(), style: const TextStyle(fontSize: 20)),
-                          title: Text(positionPlayer[1].toString()),
-                          trailing: Text(positionPlayer[2].toString(), style: const TextStyle(fontSize: 20)),
-                        )
-                  ),
-                ),
-
-                ],
-
-              ),
-            )
+            WidgetTop4Top10(bestScores: bestScores, positionPlayer: positionPlayer),
         ],
       ),
     bottomNavigationBar: const BottomNavigationBarPage(),
