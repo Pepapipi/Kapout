@@ -25,4 +25,14 @@ class UserRepository {
       });
   }
 
-}
+  Future<void> updateUsername(String userId, String userName) async {
+    if(await checkNameExist(userName) == false){
+      await _db.collection('User').doc(userId).update({'name': userName});
+    }
+  }
+
+  Future<bool> checkNameExist(String userName) async {
+    final userDoc = await _db.collection('User').where('name', isEqualTo: userName).get();
+    return userDoc.docs.isNotEmpty;
+  }
+} 

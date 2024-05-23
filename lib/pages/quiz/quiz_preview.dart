@@ -4,7 +4,8 @@ import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/models/quiz_model.dart';
 import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz.dart';
-import 'package:kapout/pages/rank/ranking_quiz.dart';
+import 'package:kapout/pages/quiz/widget_launch_quiz_button.dart';
+import 'package:kapout/pages/quiz/widget_stat_card.dart';
 import 'package:kapout/repositories/user_quiz_repository.dart';
 
 class QuizPreview extends StatefulWidget {
@@ -47,7 +48,7 @@ class _QuizPreviewState extends State<QuizPreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBarPage(),
+      bottomNavigationBar: const BottomNavigationBarPage(),
       appBar: AppBar(
         title: null,
         actions: [
@@ -84,26 +85,8 @@ class _QuizPreviewState extends State<QuizPreview> {
                       color: Colors.grey[600])),
             ],
           ),
-          SizedBox(
-            width: 210,
-            child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => Quiz(quiz: widget.quiz, userQuiz: userQuiz),
-                  ));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B2CF5),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('LANCER LE QUIZ',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                    Icon(Icons.arrow_forward, color: Colors.white),
-                  ],
-                )),
-          ),
+          LaunchQuizButton(quiz: widget.quiz, userQuiz: userQuiz),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,58 +107,28 @@ class _QuizPreviewState extends State<QuizPreview> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          statCard(
-                              'Tentatives',
-                              _userQuiz.attempts.toString(),
-                              const AssetImage('assets/redo_512x512.png'),
-                             ),
+                          StatCard(title: 'Tentatives', value:  _userQuiz.attempts.toString(), image: const AssetImage('assets/redo_512x512.png')),
                           const SizedBox(width: 20),
-                          statCard(
-                              'Meilleur score',
-                              _userQuiz.bestScore.toString(),
-                              const AssetImage('assets/flash_512x512.png'),
-                              context,
-                              _quiz.id,
-                              userQuiz,),
+                          StatCard(title: 'Temps total',value: _userQuiz.bestScore.toString(), image: const AssetImage('assets/flash_512x512.png'),idQuiz:  _quiz.id,  userQuiz: userQuiz,),
                           const SizedBox(width: 20),
-                          statCard(
-                              'Temps total',
-                              "${_userQuiz.totalTime}'",
-                              const AssetImage('assets/chrono_512x512.png'),
-                              ),
+                          StatCard(title: 'Temps total', value: "${_userQuiz.totalTime}'", image: const AssetImage('assets/chrono_512x512.png')),
                         ],
                       );
                     }
-                     return Row(
+                     return const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          statCard(
-                              'Tentatives',
-                              '0',
-                              const AssetImage('assets/redo_512x512.png'),
-                             ),
-                          const SizedBox(width: 20),
-                          statCard(
-                              'Meilleur score',
-                              '0',
-                              const AssetImage('assets/flash_512x512.png'),
-                              context,
-                              _quiz.id,
-                              userQuiz),
-                          const SizedBox(width: 20),
-                          statCard(
-                              'Temps total',
-                              "0",
-                              const AssetImage('assets/chrono_512x512.png')
-                              ),
+                          StatCard(title: 'Tentatives', value: 'Erreur', image: AssetImage('assets/redo_512x512.png')),
+                          SizedBox(width: 20),
+                          StatCard(title: 'Temps total',value: "ERREUR", image:  AssetImage('assets/flash_512x512.png')),
+                          SizedBox(width: 20),
+                          StatCard(title: 'Temps total', value: "ERREUR", image:  AssetImage('assets/chrono_512x512.png')),
                         ],
                       );
 
                   }
                  
                     return const CircularProgressIndicator();
-                  
-                  
                  
                 },
               ),
@@ -207,33 +160,3 @@ class _QuizPreviewState extends State<QuizPreview> {
   }
 }
 
-Widget statCard(String title, String value, AssetImage image, [BuildContext? context, String? idQuiz, UserQuizModel? userQuiz]) {
-  return GestureDetector(
-    onTap: () {
-      if (idQuiz != null) {
-        Navigator.of(context!).push(MaterialPageRoute(
-            builder: (BuildContext context) => RankingQuiz(userQuiz:userQuiz,idQuiz: idQuiz)));
-      }
-      // Add your stat card functionality here
-    },
-    child: Container(
-      width: 100,
-      height: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFABABAB)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Image(image: image, width: 50, height: 50),
-          const SizedBox(height: 10),
-          Text(value,
-              style:
-                  const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-        ],
-      ),
-    ),
-  );
-}
