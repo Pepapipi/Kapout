@@ -1,20 +1,18 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
-import 'package:kapout/components/question_container.dart';
-import 'package:kapout/constants.dart';
 import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
-import 'package:kapout/pages/quiz/widget_stack_question.dart';
+import 'package:kapout/pages/quiz/widgets/widget_stack_question.dart';
+import 'package:kapout/repositories/question_repository.dart';
+import 'package:kapout/repositories/quiz_repository.dart';
 
 class Quiz extends StatefulWidget {
-  Future<QuizModel> quiz;
-  UserQuizModel? userQuiz;
-  Quiz({Key? key, required this.quiz, required this.userQuiz}) : super(key: key);
+  
+  String idQuiz;
+  Quiz({Key? key, required this.idQuiz}) : super(key: key);
 
   @override
   State<Quiz> createState() => _QuizzState();
@@ -22,7 +20,6 @@ class Quiz extends StatefulWidget {
 
 class _QuizzState extends State<Quiz> {
   late Future<QuestionModel>? _questionFuture;
-  UserQuizModel? userQuiz;
 
   List<QuestionModel> _questions = []; // Initialiser _songs
   int finalScore = 0;
@@ -30,7 +27,7 @@ class _QuizzState extends State<Quiz> {
   int index = 0;
 
   late QuestionModel _question;
-  late QuizModel quiz;
+  late QuizModel quiz ;
   late DateTime start;
   final audioPlayer = AudioPlayer();
 
@@ -38,12 +35,18 @@ class _QuizzState extends State<Quiz> {
   void initState() {
     super.initState();
     start = DateTime.now();
-    userQuiz = widget.userQuiz;
     _questionFuture = null;
-    widget.quiz.then((quiz) {
+    QuizRepository.instance.getQuiz(widget.idQuiz).then((quiz)async {
+      List<QuestionModel> questions = [];
+      for (String idQuestion in quiz.questions) {
+        await QuestionRepository.instance.getQuestion(idQuestion).then((question) {
+          questions.add(question);
+        });
+      }
+      print(questions);
       setState(() {
         this.quiz = quiz;
-        _questions = quiz.questions;
+        _questions = questions;
         makePage();
       });
     }).catchError((error) {
@@ -53,10 +56,10 @@ class _QuizzState extends State<Quiz> {
   void makePage() async {
     audioPlayer.stop();
     if (index >= _questions.length) {
-
+      print(quiz.id!);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-                QuizFinalScore(score: finalScore, userQuiz: userQuiz , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
+                QuizFinalScore(score: finalScore , idQuiz: quiz!.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
           }
     _questionFuture = Future.value(_questions[index]);
     _questionFuture!.then((questionModel) {
@@ -76,7 +79,6 @@ class _QuizzState extends State<Quiz> {
       audioPlayer.play(UrlSource(downloadURL));
       start = DateTime.now();
     } catch (e) {
-      print('Erreur lors de la lecture du fichier audio : $e');
     }
   }
 
