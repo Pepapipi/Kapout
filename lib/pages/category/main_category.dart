@@ -42,8 +42,7 @@ class _MainCategoryState extends State<MainCategory> {
   //---------------MAIN-----------
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -88,8 +87,7 @@ class _MainCategoryState extends State<MainCategory> {
           ),
         ),
          bottomNavigationBar: const BottomNavigationBarPage(),
-      ),
-    );
+      );
   }
 
   //----------------BARRE DE RECHERCHES---------------
