@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kapout/pages/authentification/login.dart';
-import 'package:kapout/pages/category/ListQuizzCategory.dart';
 import 'package:kapout/pages/category/main_category.dart';
 import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/services/firebase_auth_service.dart';
@@ -56,7 +55,7 @@ class BottomNavigationBarPage extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) =>  const ListQuizzCategoriePage(),
+                    builder: (BuildContext context) =>  const MainCategory(),
                   ));
                 },
                 child: Image.asset('assets/navbar/man.png',

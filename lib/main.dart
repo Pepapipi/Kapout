@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/pages/authentification/login.dart';
-import 'package:kapout/pages/category/ListQuizzCategory.dart';
-import 'package:kapout/pages/home/home.dart';
+import 'package:kapout/pages/category/main_category.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'firebase_options.dart';
 
@@ -52,7 +51,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: firebaseUser != null ? const ListQuizzCategoriePage() : const Login(),
+      home: firebaseUser != null ? const MainCategory() : const Login(),
     );
   }
 }

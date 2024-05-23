@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/pages/quiz/quiz.dart';
 import 'package:kapout/repositories/category_repository.dart';
 import 'package:kapout/repositories/quiz_repository.dart';
 import 'package:kapout/services/firebase_storage_service.dart';
 
-class ListQuizzCategoriePage extends StatefulWidget {
+class ListQuizzes extends StatefulWidget {
 
-  const ListQuizzCategoriePage({super.key});
+  final String idCategory;
+  const ListQuizzes({required this.idCategory,super.key});
 
   @override
-  _ListQuizzCategoriePageState createState() => _ListQuizzCategoriePageState();
+  _ListQuizzesState createState() => _ListQuizzesState();
 }
 
-class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
+class _ListQuizzesState extends State<ListQuizzes> {
   // Liste test des noms de quizz
   List<QuizModel> quizzes = [];
   List<String> images = [];
+  String nameCategory= '';
 
-  final String nomCategorie = 'Disney'; //Cela représente le nom de la catégorie
   //sur laquel l'utilisateur a cliqué
 
   // Chemin vers le logo utilisé en haut à droite de la page
@@ -27,7 +27,7 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
   @override
   void initState()  {
     super.initState();
-    CategoryRepository.instance.getCategory('n9v5x6KjkBzoO7WNXhN9').then((value) async {
+    CategoryRepository.instance.getCategory(widget.idCategory).then((value) async {
         List<QuizModel> quizzesTamp = [];
         List<String> imagesTamp = [];
 
@@ -43,10 +43,10 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
       setState(() {
         quizzes = quizzesTamp;
         images = imagesTamp;
+        nameCategory = value.name;
       });
      
     } );
-    //On récupère les quizz de la catégorie mais il 
   }
 
   //---------------MAIN-----------
@@ -54,16 +54,23 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            nomCategorie,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 40, // Taille de la police
+          title: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  nameCategory,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30, // Taille de la police
+                  ),
+                ),
+                Image.asset(imageLogoPath,  width: 50, height: 50),
+              ],
             ),
           ),
-          actions: <Widget>[
-            Image.asset(imageLogoPath), //logo en haut à droite
-          ],
+
         ),
         body: Container(
           // Container pour la marge
@@ -115,9 +122,9 @@ class _ListQuizzCategoriePageState extends State<ListQuizzCategoriePage> {
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Rechercher...',
-          prefixIcon: Icon(Icons.search),
+          prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
+            borderSide: const BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(8),
           ),
         ),
