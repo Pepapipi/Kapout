@@ -10,8 +10,13 @@ class FirebaseAuthService {
 
     try {
       UserCredential credential =await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      if (await UserRepository.instance.checkNameExist(userName)) {
+        showToast(message: 'The username is already in use.');
+        return null;
+      }
       UserRepository.instance.createUser(FirebaseAuth.instance.currentUser!.uid, userName, email);
       return credential.user;
+      
     } on FirebaseAuthException catch (e) {
 
       if (e.code == 'email-already-in-use') {
