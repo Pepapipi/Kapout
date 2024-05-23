@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kapout/bottom_app_bar.dart';
 import 'package:kapout/models/category_model.dart';
-import 'package:kapout/pages/category/list_quizzes.dart';
+import 'package:kapout/pages/category/widget_select_category.dart';
 import 'package:kapout/repositories/category_repository.dart';
 import 'package:kapout/services/firebase_storage_service.dart';
 
@@ -26,11 +26,9 @@ class _MainCategoryState extends State<MainCategory> {
     super.initState();
     List<String> imagesTamp = [];
     CategoryRepository.instance.allCategories().then((value) async {
-      
       for (var i = 0; i < value.length; i++) {
         imagesTamp.add(await FirebaseStorageService.instance.getAsset(value[i].image));
       }
-
       //Tableau des images
       setState(() {
         categories = value;
@@ -57,7 +55,6 @@ class _MainCategoryState extends State<MainCategory> {
                     fontSize: 40, // Taille de la police
                   ),
                 ),
-
                 Image.asset(imagePath, width: 50, height: 50),
               ],
             ),
@@ -80,7 +77,7 @@ class _MainCategoryState extends State<MainCategory> {
                   ),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
-                    return buildRectangle(categories[index].name, images[index], categories[index].id!, context);
+                    return SelectCategory(name: categories[index].name, image: images[index],idCategory:  categories[index].id!);
                   },
                 ),
               ),
@@ -111,45 +108,6 @@ class _MainCategoryState extends State<MainCategory> {
       ),
     );
   }
-
 }
-  //---------RECTANGLES--------------
-  // Widget pour les rectangles
-  buildRectangle(String name, String image, String idCategory, BuildContext context){
-    const TextStyle textStyle = TextStyle(
-      fontSize: 25, // Taille de police souhaitée
-      fontWeight: FontWeight.bold, // Police en gras
-      color: Colors.white, // Couleur du texte en blanc
-    );
-    return GestureDetector(
-      onTap: () {
-        // Rediriger vers la page de quiz
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ListQuizzes(idCategory: idCategory)));
-      },
-      child: Container(
-        width: 60,
-        height: 50,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black, width: 2), // Contour noir
-          borderRadius: BorderRadius.circular(10), // Bords arrondis
-          image: DecorationImage(
-              image: NetworkImage(image), // Image de fond
-            fit: BoxFit.cover, // Ajustez l'image pour couvrir tout le conteneur
-          ),
-        ),
-        margin: const EdgeInsets.all(8),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomLeft, // Texte en bas à gauche
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(name, style: textStyle),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
