@@ -9,6 +9,7 @@ import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
 import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
+import 'package:kapout/pages/quiz/widget_stack_question.dart';
 
 class Quiz extends StatefulWidget {
   Future<QuizModel> quiz;
@@ -46,8 +47,6 @@ class _QuizzState extends State<Quiz> {
         makePage();
       });
     }).catchError((error) {
-      print("Error fetching quiz: $error");
-      // Handle error accordingly, e.g., show an error message
     });
   }
 
@@ -114,10 +113,10 @@ class _QuizzState extends State<Quiz> {
             _question = snapshot.data!;
             return Column(
               children: [
-                stackQuestion(_question.type != 'artist'
+                StackQuestion(text:  _question.type != 'artist'
                     ? "Trouver le titre de la musique"
                     : "Trouver l'artiste de la musique",
-                    index + 1, _questions.length),
+                    index: index + 1, questionsLength:  _questions.length),
                 Column(
                   children: [
                     proposition(_question.answer, _question.propositions[0]),
@@ -138,33 +137,3 @@ class _QuizzState extends State<Quiz> {
   }
 }
 
-Widget stackQuestion(String text, int index, int questionsLength) {
-  return Stack(
-    children: [
-      Container(
-        height: 300.0,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-        ),
-      ),
-      Container(
-        height: 150.0,
-        decoration: const BoxDecoration(
-            color: primaryColor,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            )),
-      ),
-      Positioned.fill(
-        child: Align(
-          alignment: Alignment.center,
-          child: QuestionContainer(text: text, index: index.toString(), total: questionsLength.toString(),
-        ),
-        )
-      )
-    ],
-  );
-}

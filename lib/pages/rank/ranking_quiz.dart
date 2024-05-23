@@ -63,7 +63,7 @@ class _RankingQuizState extends State<RankingQuiz> {
       backgroundColor: primaryColorLight,
       appBar: AppBar(
       ),
-      body: topPlayers.isEmpty ? const CircularProgressIndicator() : Column(
+      body: topPlayers.isEmpty ? const Center(child:CircularProgressIndicator()) : Column(
         children: [
           const SizedBox(height: 45,),
            Podium(
