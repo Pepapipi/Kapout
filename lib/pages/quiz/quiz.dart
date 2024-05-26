@@ -1,19 +1,18 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/components/container_song.dart';
-import 'package:kapout/components/question_container.dart';
-import 'package:kapout/constants.dart';
 import 'package:kapout/models/question_model.dart';
 import 'package:kapout/models/quiz_model.dart';
-import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/quiz_final_score.dart';
+import 'package:kapout/pages/quiz/widgets/widget_stack_question.dart';
+import 'package:kapout/repositories/question_repository.dart';
+import 'package:kapout/repositories/quiz_repository.dart';
 
 class Quiz extends StatefulWidget {
-  Future<QuizModel> quiz;
-  UserQuizModel? userQuiz;
-  Quiz({Key? key, required this.quiz, required this.userQuiz}) : super(key: key);
+  
+  String idQuiz;
+  Quiz({Key? key, required this.idQuiz}) : super(key: key);
 
   @override
   State<Quiz> createState() => _QuizzState();
@@ -21,7 +20,6 @@ class Quiz extends StatefulWidget {
 
 class _QuizzState extends State<Quiz> {
   late Future<QuestionModel>? _questionFuture;
-  UserQuizModel? userQuiz;
 
   List<QuestionModel> _questions = []; // Initialiser _songs
   int finalScore = 0;
@@ -29,7 +27,7 @@ class _QuizzState extends State<Quiz> {
   int index = 0;
 
   late QuestionModel _question;
-  late QuizModel quiz;
+  late QuizModel quiz ;
   late DateTime start;
   final audioPlayer = AudioPlayer();
 
@@ -37,27 +35,31 @@ class _QuizzState extends State<Quiz> {
   void initState() {
     super.initState();
     start = DateTime.now();
-    userQuiz = widget.userQuiz;
     _questionFuture = null;
-    widget.quiz.then((quiz) {
+    QuizRepository.instance.getQuiz(widget.idQuiz).then((quiz)async {
+      List<QuestionModel> questions = [];
+      for (String idQuestion in quiz.questions) {
+        await QuestionRepository.instance.getQuestion(idQuestion).then((question) {
+          questions.add(question);
+        });
+      }
+      print(questions);
       setState(() {
         this.quiz = quiz;
-        _questions = quiz.questions;
+        _questions = questions;
         makePage();
       });
     }).catchError((error) {
-      print("Error fetching quiz: $error");
-      // Handle error accordingly, e.g., show an error message
     });
   }
 
   void makePage() async {
     audioPlayer.stop();
     if (index >= _questions.length) {
-
+      print(quiz.id!);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-                QuizFinalScore(score: finalScore, userQuiz: userQuiz , idQuiz: quiz.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
+                QuizFinalScore(score: finalScore , idQuiz: quiz!.id!, totalTime:   DateTime.now().difference(start).inSeconds)));
           }
     _questionFuture = Future.value(_questions[index]);
     _questionFuture!.then((questionModel) {
@@ -77,7 +79,6 @@ class _QuizzState extends State<Quiz> {
       audioPlayer.play(UrlSource(downloadURL));
       start = DateTime.now();
     } catch (e) {
-      print('Erreur lors de la lecture du fichier audio : $e');
     }
   }
 
@@ -114,10 +115,10 @@ class _QuizzState extends State<Quiz> {
             _question = snapshot.data!;
             return Column(
               children: [
-                stackQuestion(_question.type != 'artist'
+                StackQuestion(text:  _question.type != 'artist'
                     ? "Trouver le titre de la musique"
                     : "Trouver l'artiste de la musique",
-                    index + 1, _questions.length),
+                    index: index + 1, questionsLength:  _questions.length),
                 Column(
                   children: [
                     proposition(_question.answer, _question.propositions[0]),
@@ -138,33 +139,3 @@ class _QuizzState extends State<Quiz> {
   }
 }
 
-Widget stackQuestion(String text, int index, int questionsLength) {
-  return Stack(
-    children: [
-      Container(
-        height: 300.0,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-        ),
-      ),
-      Container(
-        height: 150.0,
-        decoration: const BoxDecoration(
-            color: primaryColor,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            )),
-      ),
-      Positioned.fill(
-        child: Align(
-          alignment: Alignment.center,
-          child: QuestionContainer(text: text, index: index.toString(), total: questionsLength.toString(),
-        ),
-        )
-      )
-    ],
-  );
-}

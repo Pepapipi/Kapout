@@ -5,12 +5,12 @@ class QuizRepository {
   static QuizRepository get instance => QuizRepository();
   final _db = FirebaseFirestore.instance;
 
-  Future<List<Future<QuizModel>>> allQuizz() async {
+  Future<List<Future<QuizModel>>> allQuizzes() async {
     final quizzs = await _db.collection('Quiz').get();
     return quizzs.docs.map((e) => QuizModel.fromSnapshot(e)).toList();
   }
 
-  Future<QuizModel> getQuizz(String id) async {
+  Future<QuizModel> getQuiz(String id) async {
     final quizz = await _db.collection('Quiz').doc(id).get();
     return QuizModel.fromSnapshot(quizz);
    }
