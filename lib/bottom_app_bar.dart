@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kapout/pages/authentification/login.dart';
 import 'package:kapout/pages/category/main_category.dart';
-
-import 'package:kapout/pages/home/home.dart';
 import 'package:kapout/pages/user/userProfile.dart';
 
 import 'package:kapout/services/firebase_auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kapout/models/user_model.dart';
-import 'package:kapout/repositories/user_repository.dart';
+
 
 class BottomNavigationBarPage extends StatelessWidget {
   const BottomNavigationBarPage({super.key});
@@ -60,11 +56,10 @@ class BottomNavigationBarPage extends StatelessWidget {
       
             GestureDetector(
                 onTap: () {
-                  Future<UserModel> futureUser = UserRepository.instance.getUser(FirebaseAuth.instance.currentUser!.uid);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
 
                     //builder: (BuildContext context) => const HomePage(),
-                    builder: (BuildContext context) => UserProfile(user: futureUser),
+                    builder: (BuildContext context) => const UserProfile(),
 
                   ));
                 },

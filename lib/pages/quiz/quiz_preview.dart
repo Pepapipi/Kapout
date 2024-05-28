@@ -26,22 +26,23 @@ class _QuizPreviewState extends State<QuizPreview> {
   Future<UserQuizModel>? userQuizModelFuture;
   Future<QuizModel>? quizModelFuture;
   String imageUrl='';
-  String name = 'aaaaaaa'; 
+  String name = ''; 
 
   @override
   void initState()  {
     super.initState();
+    print(widget.idQuiz);
     userQuizModelFuture = UserQuizRepository.instance.getUserQuiz(FirebaseAuth.instance.currentUser!.uid, widget.idQuiz);
     quizModelFuture = QuizRepository.instance.getQuiz(widget.idQuiz);
 
 
 
-    quizModelFuture?.then((value) async {
-      await UserRepository.instance.getUser(value.idCreator).then((user) {
+    quizModelFuture?.then((value)  {
+       UserRepository.instance.getUser(value.idCreator).then((user) {
         name = user.name;
       });
 
-      await FirebaseStorageService.instance.getAsset(value.image!).then((value) {
+       FirebaseStorageService.instance.getAsset(value.image!).then((value) {
         setState(() {
           imageUrl = value;
           name= name;

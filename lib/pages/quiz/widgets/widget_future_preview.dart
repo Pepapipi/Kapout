@@ -3,6 +3,7 @@ import 'package:kapout/models/quiz_model.dart';
 import 'package:kapout/models/user_quiz_model.dart';
 import 'package:kapout/pages/quiz/widgets/widget_future_stats.dart';
 import 'package:kapout/pages/quiz/widgets/widget_launch_quiz_button.dart';
+import 'package:kapout/pages/user/widgets/widget_share.dart';
 
 class FuturePreviewQuiz extends StatelessWidget {
 
@@ -58,26 +59,7 @@ class FuturePreviewQuiz extends StatelessWidget {
 
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(22.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.ios_share_rounded,
-                                    color: Color(0xFF8B2CF5), size: 30.0),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      WidgetShare(),
                     ],
                   );
                 }
