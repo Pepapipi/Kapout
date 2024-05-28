@@ -2,18 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kapout/constants.dart';
 import 'package:kapout/models/user_quiz_model.dart';
-import 'package:kapout/pages/home/home.dart';
-import 'package:kapout/pages/rank/ranking_quiz.dart';
+import 'package:kapout/pages/quiz/widgets/widget_padding_back.dart';
+import 'package:kapout/pages/quiz/widgets/widget_padding_crown.dart';
+import 'package:kapout/pages/quiz/widgets/widget_padding_ranking.dart';
 import 'package:kapout/repositories/user_quiz_repository.dart';
+import 'package:kapout/repositories/user_repository.dart';
 
 class QuizFinalScore extends StatefulWidget {
   final int score;
   final int totalTime;
   final String idQuiz;
-  UserQuizModel? userQuiz;
 
 
-  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.userQuiz, required this.idQuiz});
+  QuizFinalScore({super.key, required this.score, required this.totalTime, required this.idQuiz});
 
   @override
   State<QuizFinalScore> createState() => _QuizFinalScoreState();
@@ -25,26 +26,37 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
   @override
   void initState() {
     super.initState();
-    userQuiz = widget.userQuiz;
+    UserQuizRepository.instance.getUserQuiz(FirebaseAuth.instance.currentUser!.uid, widget.idQuiz).then((value) {
+      UserRepository.instance.updateStats(0, widget.score, widget.totalTime, FirebaseAuth.instance.currentUser!.uid);
 
-    //Si UserQuiz est null, on crée un UserQuizModel
-    if (userQuiz == null) {
-      userQuiz = UserQuizModel(
+      userQuiz = value;
+      widget.score > userQuiz!.bestScore! ? userQuiz!.bestScore = widget.score : userQuiz!.bestScore = userQuiz!.bestScore;
+      userQuiz!.totalTime = widget.totalTime;
+      userQuiz!.attempts = userQuiz!.attempts + 1;
+
+      //On enregistre le UserQuizModel
+      UserQuizRepository.instance.saveUserQuiz(userQuiz!);
+setState(() {
+      userQuiz = userQuiz;
+    });
+    },).catchError((error) {
+        UserRepository.instance.updateStats(1, widget.score, widget.totalTime, FirebaseAuth.instance.currentUser!.uid);
+        userQuiz = UserQuizModel(
         idUser: FirebaseAuth.instance.currentUser!.uid,
         idQuiz: widget.idQuiz,
         bestScore: widget.score,
         totalTime: widget.totalTime,
         attempts: 1
       );
-    } else {
-      //Si UserQuiz n'est pas null, on met à jour le score et le temps
-      widget.score > userQuiz!.bestScore! ? userQuiz!.bestScore = widget.score : userQuiz!.bestScore = userQuiz!.bestScore;
-      userQuiz!.totalTime = widget.totalTime;
-      userQuiz!.attempts = userQuiz!.attempts + 1;
-    }
+      //On enregistre le UserQuizModel
+      UserQuizRepository.instance.saveUserQuiz(userQuiz!);
+setState(() {
+      userQuiz = userQuiz;
+    });
+    });
 
-    //On enregistre le UserQuizModel
-    UserQuizRepository.instance.saveUserQuiz(userQuiz!);
+    
+    
   }
 
   @override
@@ -60,82 +72,10 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
                   width: 250,
                   height: 250,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Félicitations !',
-                    style: TextStyle(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  const Text(
-                    'Totouffe',
-                    style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: yellowCrown,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${widget.score}',
-                        style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: GestureDetector(
-                    onTap: () {
-                    Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) =>  const HomePage()));
-                  ;
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                          child: Text(
-                                  "Revenir au menu",
-                                  style: TextStyle(
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: GestureDetector(
-                    onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RankingQuiz(userQuiz: userQuiz,idQuiz: widget.idQuiz,)));
-                  
-                    },
-
-                      child: const Center(
-                          child: Text(
-                                  "Voir le classement",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold
-                                      ),
-                                )),
-                    ),
-                  ),
-                
+              PaddingCrown(score: widget.score),
+              PaddingBack(),
+              PaddingRanking(idQuiz: widget.idQuiz, userQuiz: userQuiz!),
+      
           ],
         ),
       ),

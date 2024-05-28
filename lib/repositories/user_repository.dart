@@ -21,8 +21,29 @@ class UserRepository {
         'idCumul': '',
         'quizzTotal': 0,
         'xpTotal': 0,
-        'timeTotal': 0
+        'timeTotal': 0,
+        'createdAt': FieldValue.serverTimestamp(),
       });
   }
 
-}
+  Future<void> updateUsername(String userId, String userName) async {
+    if(await checkNameExist(userName) == false){
+      await _db.collection('User').doc(userId).update({'name': userName});
+    }
+  }
+
+  Future<bool> checkNameExist(String userName) async {
+    final userDoc = await _db.collection('User').where('name', isEqualTo: userName).get();
+    return userDoc.docs.isNotEmpty;
+  }
+
+  Future<void> updateStats(int finishQuiz, int xp, int time, String userId) async {
+    final userDoc = await _db.collection('User').doc(userId).get();
+    final user = UserModel.fromSnapshot(userDoc);
+    await _db.collection('User').doc(userId).update({
+      'quizzTotal': user.quizzTotal + finishQuiz,
+      'xpTotal': user.xpTotal + xp,
+      'timeTotal': user.timeTotal + time,
+    });
+  }
+} 

@@ -10,6 +10,8 @@ class UserModel {
   int quizzTotal;
   int xpTotal;
   int timeTotal;
+  Timestamp createdAt;
+
 
   UserModel({
     required this.id,
@@ -20,7 +22,8 @@ class UserModel {
     required this.idCumul,
     required this.quizzTotal,
     required this.xpTotal,
-    required this.timeTotal
+    required this.timeTotal,
+    required this.createdAt,
   }); 
 
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
@@ -33,7 +36,8 @@ class UserModel {
       idCumul: map['idCumul'],
       quizzTotal: map['quizzTotal'],
       xpTotal: map['xpTotal'],
-      timeTotal: map['timeTotal']
+      timeTotal: map['timeTotal'],
+      createdAt: map['createdAt'],
     );
   }
 
