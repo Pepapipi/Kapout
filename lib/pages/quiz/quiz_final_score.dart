@@ -6,6 +6,7 @@ import 'package:kapout/pages/quiz/widgets/widget_padding_back.dart';
 import 'package:kapout/pages/quiz/widgets/widget_padding_crown.dart';
 import 'package:kapout/pages/quiz/widgets/widget_padding_ranking.dart';
 import 'package:kapout/repositories/user_quiz_repository.dart';
+import 'package:kapout/repositories/user_repository.dart';
 
 class QuizFinalScore extends StatefulWidget {
   final int score;
@@ -26,6 +27,7 @@ class _QuizFinalScoreState extends State<QuizFinalScore> {
   void initState() {
     super.initState();
     UserQuizRepository.instance.getUserQuiz(FirebaseAuth.instance.currentUser!.uid, widget.idQuiz).then((value) {
+      UserRepository.instance.updateStats(0, widget.score, widget.totalTime, FirebaseAuth.instance.currentUser!.uid);
 
       userQuiz = value;
       widget.score > userQuiz!.bestScore! ? userQuiz!.bestScore = widget.score : userQuiz!.bestScore = userQuiz!.bestScore;
@@ -38,6 +40,7 @@ setState(() {
       userQuiz = userQuiz;
     });
     },).catchError((error) {
+        UserRepository.instance.updateStats(1, widget.score, widget.totalTime, FirebaseAuth.instance.currentUser!.uid);
         userQuiz = UserQuizModel(
         idUser: FirebaseAuth.instance.currentUser!.uid,
         idQuiz: widget.idQuiz,
